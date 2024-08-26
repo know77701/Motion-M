@@ -3,6 +3,7 @@ import os
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from test_case.login_test import *
+from test_case.sign_up_test import *
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -29,59 +30,10 @@ class mainTest(unittest.TestCase):
 
     def test_case_run(self):
         try:
-            login = Login(driver=self.driver)
-            login.login_test()
-            
-            # setting_btn =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView").instance(0)')))
-            # setting_btn.click()
-
-            # back_btn =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("Back")')))
-            # back_btn.click()
-
-            # description_text =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("트라이업영문")')))
-            # if description_text:
-            #     print("back_btn action check")
-            
-            # status_setting_btn =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView").instance(1)')))
-            
-            
-            # not_status = WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.view.View").instance(0)')))
-            # bust_status = WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.view.View").instance(1)')))
-            # metting_status = WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.view.View").instance(2)')))
-            # available_status = WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.view.View").instance(3)')))
-            
-            
-            # home_depth_btn =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView").instance(3)')))
-            
-            # message_depth_btn =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView").instance(4)')))
-            # message_depth_btn.click()
-            # message_depth_btn =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView").instance(5)')))
-            
-            # message_room =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.view.View").instance(7)')))
-            # message_room.click()
-            # message_edit =  WebDriverWait(self.driver, 5).until(
-            #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.EditText")')))
-            # print(message_edit)            
-            # send_btn = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.EditText").instance(0)')))
-            # index_value = 10
-            
-            # message_edit.click()
-            # send_btn.send_keys("테스트")
-            # send_btn.click()
-
-            
+            # login = Login(driver=self.driver)
+            # login.test_run()
+            sign_up = SignUp(driver=self.driver)
+            sign_up.test_run()
         except Exception as e:
             print(f"Error occurred: {e}")
     

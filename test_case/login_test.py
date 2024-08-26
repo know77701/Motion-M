@@ -8,11 +8,11 @@ import time
 
 class Login:
     def __init__(self, driver):
+        self.driver = driver
         self.id_value = "1111111111"
         self.pw_value = "test12!@"
         self.lock_id = "1234562"
         self.withdrawal_id = "withdrawal"
-        self.driver = driver
         self.logo_image = WebDriverWait(self.driver, 5).until(
             EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView")')))
         self.id_edit = WebDriverWait(self.driver, 5).until(
@@ -24,7 +24,7 @@ class Login:
         self.login_btn =  WebDriverWait(self.driver, 5).until(
             EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("로그인")')))
     
-    def login_test(self):
+    def test_run(self):
         # self.test_login_description_check()
         # self.test_non_register_user_login()
         # self.test_different_password()
@@ -141,7 +141,40 @@ class Login:
             id_save_btn.click()
         
         self.login_btn.click()
+        
+        self.logout_user()
+        if self.id_edit.get_attribute("text") == self.id_value:
+            print("save check")
+        else:
+            print("-------test check")
+        
+        self.edit_data_input(self.id_value, self.pw_value)
+        if check_value != "false":
+            id_save_btn.click()
+        self.login_btn.click()
+        
+        self.logout_user()
+        if self.id_edit.get_attribute("text") == "":
+            print("save check")
+        else:
+            print("--------test check")
     
-    
-    def test_logout_user(self):
-        print("로그아웃 진행해야함.")
+    def logout_user(self):
+        setting_btn = WebDriverWait(self.driver, 5).until(
+            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView").instance(0)')))
+        setting_btn.click()
+        
+        login_menu = WebDriverWait(self.driver, 5).until(
+            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("로그인")')))
+        login_menu.click()
+        
+        logout_btn = WebDriverWait(self.driver, 5).until(
+            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("로그아웃")')))
+        logout_btn.click()
+        
+        logout_popup_btn = WebDriverWait(self.driver, 5).until(
+            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.Button").instance(1)')))
+        logout_popup_btn.click()
+        
+        
+        
