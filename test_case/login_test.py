@@ -33,12 +33,17 @@ class Login:
         # self.test_login_sucess()
         self.test_save_user_id()
     
-    def edit_data_input(self, id, password):
-        self.id_edit.click()
-        self.id_edit.send_keys(id)
-        self.pw_edit.click()
-        self.pw_edit.send_keys(password)
-        self.logo_image.click()
+    def edit_data_input(self, *args):
+        if len(args) == 1:
+            self.id_edit.click()
+            self.id_edit.send_keys(args[0])
+            self.logo_image.click()
+        elif len(args) == 2:
+            self.id_edit.click()
+            self.id_edit.send_keys(args[1])
+            self.pw_edit.click()
+            self.pw_edit.send_keys()
+            self.logo_image.click()
         
     def return_popup(self):
         popup = WebDriverWait(self.driver, 5).until(
