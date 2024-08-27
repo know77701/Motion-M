@@ -18,9 +18,11 @@ class SignUp:
         self.fr_sub_title = "휴대폰 인증"
         self.sec_sub_title = "본인 명의의 휴대폰 번호로 인증합니다."
         self.th_sub_title = "타인 명의 휴대폰, 법인폰을 이용자는 본인인증이 불가합니다."
+        
     
     def test_run(self):
-        self.test_ui_check()
+        # self.test_detail_ui_check()
+        self.test_checkbox_control()
         return
     
     def get_all_elements(self, class_name):
@@ -28,11 +30,25 @@ class SignUp:
             EC.presence_of_all_elements_located((AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().className("{class_name}")')))
         return elements
     
-    def test_ui_check(self):
-        element_list = []
-        detail_back_btn = None
-        view_elements = self.get_all_elements("android.view.View")
+    def test_checkbox_control(self):
         check_box_elements = self.get_all_elements("android.widget.CheckBox")
+        btn_elements = self.et_all_elements("android.widget.Button")
+        
+        for element in btn_elements:
+            content_desc = element.get_attribute("contentDescription")
+            if content_desc == "휴대폰 본인 인증" : 
+                next_btn = element
+        next_btn.get_attribute("checked")
+
+        if check_box_elements[0].get_attribute("checked") == "false":
+            check_box_elements[0].click()
+            if check_box_elements[1].get_attribute("checked") == "true" and check_box_elements[2].get_attribute("checked") == "true" and check_box_elements[3].get_attribute("checked") == "true":
+                print("all check btn check")
+                  
+    def test_detail_ui_check(self):
+        element_list = []
+        view_elements = self.get_all_elements("android.view.View")
+        
         btn_elements = self.get_all_elements("android.widget.Button")
         for i, element in enumerate(view_elements):
             content_desc = element.get_attribute("contentDescription")
@@ -44,20 +60,7 @@ class SignUp:
                 essential_user_detail = element
             if i == 12 :
                 select_service_detail = element
-                
-                
-        # for i, element in enumerate(check_box_elements):
-        #     content_desc = element.get_attribute("contentDescription")
-        #     print(i)
-        #     print(content_desc)
-        # for i, element in enumerate(btn_elements):
-        #     content_desc = element.get_attribute("contentDescription")
-        #     if content_desc == "Back":
-        #         back_btn = element
-        #     elif content_desc == "휴대폰 번호 인증":
-        #         auth_btn = element
-        #     print(i)
-        #     print(content_desc)
+
         titles = [
             self.sing_up_titlt, 
             self.terms_title, 
@@ -73,25 +76,65 @@ class SignUp:
         if any(element in titles for element in element_list):
             print("check ui title")
         
-        if essential_service_detail is not None:
+        if essential_service_detail is not None and essential_user_detail is not None and select_service_detail is not None:
             essential_service_detail.click()
-            service_page = self.get_all_elements("android.view.View")
-            btn_elements = self.get_all_elements("android.widget.Button")
-            for element in btn_elements:
-                content_desc = element.get_attribute("contentDescription")
-                if content_desc == "Back":
-                    detail_back_btn = element
-            for element in service_page:
+            service_detail_page = self.get_all_elements("android.view.View")
+            service_btn_elements = self.get_all_elements("android.widget.Button")
+            service_detail_back_btn = self.get_detail_back_btn(service_btn_elements)
+            for element in service_detail_page:
                 content_desc = element.get_attribute("contentDescription")
                 if content_desc == "서비스 이용 약관":
                     print("essential service detail view check")
-                    detail_back_btn.click()
+                    service_detail_back_btn.click()
                     break
-        if essential_user_detail is not None:
+                
             essential_user_detail.click()
+            user_detail_page = self.get_all_elements("android.view.View")
+            user_btn_elements = self.get_all_elements("android.widget.Button")
+            user_detail_back_btn = self.get_detail_back_btn(user_btn_elements)
             
+            for element in user_detail_page:
+                content_desc = element.get_attribute("contentDescription")
+                if content_desc == "개인정보 처리방침":
+                    print("essential user detail view check")
+                    user_detail_back_btn.click()
+                    break
         
-        # back_btn.click()
-        # auth_btn.clcik()
+            select_service_detail.click()
+            select_service_detail_page = self.get_all_elements("android.view.View")
+            select_btn_elements = self.get_all_elements("android.widget.Button")
+            service_desc_list = []
+            
+            select_back_btn = self.get_detail_back_btn(select_btn_elements)
+            for element in select_service_detail_page:
+                content_desc = element.get_attribute("contentDescription")
+                if content_desc != '':
+                    service_desc_list.append(content_desc)
+            compare_arr = [
+                '마케팅 수신 동의', 
+                '마케팅 수신에 대한 동의(선택)', 
+                '수집 · 이용 항목', 
+                '수집 · 이용 목적', 
+                '보유기간', 
+                '이메일 주소', 
+                'SMS', 
+                '회원의 이메일 또는 SMS를 이용하여 \n이벤트 및 혜택 정보 안내', 
+                '회원탈퇴 및 동의 철회 시 까지', 
+                '본 동의를 거부하실 수 있습니다.\n다만 거부시 동의를 통해 제공 가능한 이벤트 및 혜택 정보 등의 안내를 받아 보실 수 없습니다.'
+            ]
+            if any(element in compare_arr for element in service_desc_list):
+                print("select detail ui check")
+            else:
+                print("------ test check")
+            select_back_btn.click()
+                
+    def get_detail_back_btn(self, btn_list):
+        for element in btn_list:
+            content_desc = element.get_attribute("contentDescription")
+            if content_desc == "Back":
+                detail_back_btn = element
+                return detail_back_btn
+                
+    
         
     
