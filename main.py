@@ -39,8 +39,6 @@ class mainTest(unittest.TestCase):
     
     def setting_test_case(self):
         try:
-            
-
             time.sleep(1)
         except Exception as e:
             print(e)
