@@ -181,5 +181,3 @@ class Login:
             EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.Button").instance(1)')))
         logout_popup_btn.click()
         
-        
-        
