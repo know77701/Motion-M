@@ -1,14 +1,8 @@
 import unittest
-import os
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from test_case.login_test import *
 from test_case.sign_up_test import *
-
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from appium.webdriver.common.appiumby import AppiumBy
 import time
 
 class mainTest(unittest.TestCase):
@@ -23,6 +17,12 @@ class mainTest(unittest.TestCase):
         options.device_name = "emulator-5554"
         options.automation_name = "UiAutomator2"
         # options.app = "C:/works/Motion_M/motionm_240809.apk"
+        self.view_class_name = "android.view.View"
+        self.button_class_name = "android.widget.Button"
+        self.checkbox_class_name = "android.widget.CheckBox"
+        self.edit_class_name = "android.widget.EditText"
+        self.image_class_name = "android.widget.ImageView"
+        
 
         self.driver = webdriver.Remote(command_executor='http://127.0.0.1:4723', options=options)
         
@@ -30,10 +30,10 @@ class mainTest(unittest.TestCase):
 
     def test_case_run(self):
         try:
-            # login = Login(driver=self.driver)
-            # login.test_run()
-            sign_up = SignUp(driver=self.driver)
-            sign_up.test_run()
+            login = Login(driver=self.driver)
+            login.test_run()
+            # sign_up = SignUp(driver=self.driver)
+            # sign_up.test_run()
         except Exception as e:
             print(f"Error occurred: {e}")
     
@@ -50,3 +50,4 @@ class mainTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    
