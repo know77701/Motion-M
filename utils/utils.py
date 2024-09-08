@@ -1,13 +1,16 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from appium.webdriver.common.appiumby import AppiumBy
-from PIL import Image
 import cv2
 import numpy as np
+import os
+import json
+import os
 
 class Utils:
     def __init__(self, driver):
         self.driver = driver
+        self.image_url = "../compare_image/"
     
     def scroll_action(self, class_name, description=None):
         if description is not None:
@@ -30,21 +33,30 @@ class Utils:
         return WebDriverWait(self.driver, 5).until(
             EC.presence_of_all_elements_located((AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().className("{class_name}")')))
         
-    def compare_image(self, file_name ,element, comapre_image):
+    def compare_image(self, file_name ,element, compare_image):
+        
         element_screenshot = element.screenshot_as_png
         with open(file_name, "wb") as file:
             file.write(element_screenshot)
         
-        img1 = cv2.imread(comapre_image)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        compare_image_path = os.path.join(current_dir, '../compare_image', compare_image)
+        
+        img1 = cv2.imread(compare_image_path)
         img2 = cv2.imread(file_name)
 
+        if img1 is None or img2 is None:
+            print("Error: One of the images could not be read.")
+            return False
+        
         img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
         img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
         
+        
         difference = cv2.absdiff(img1_gray, img2_gray)
         result = not np.any(difference)
-        
-        return result    
+        return result
     
     def get_element_by_content_desc(self, elements, content_desc):
         for element in elements:
@@ -60,3 +72,11 @@ class Utils:
         popup_elements = [popup, close_btn]
         
         return popup_elements
+    
+    def get_data_json(self, data_vlaue):
+        
+        file_path = os.path.join(os.path.dirname(__file__), '../data/test_data.json')
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+
+        return data.get(data_vlaue)

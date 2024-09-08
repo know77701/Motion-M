@@ -1,4 +1,3 @@
-
 class SignUp:
     TITLE_CONTENT = [
             "회원가입",
@@ -31,7 +30,7 @@ class SignUp:
     def __init__(self, driver):
         self.driver = driver
         self.btn_screenshot = "button_screenshot.png"
-        self.enabled_btn = "./compare_image/button_screenshot_enabled.png"
+        self.enabled_btn = "./compare_image/`button`_screenshot_enabled.png"
         self.active_btn = "./compare_image/button_screenshot_active.png"
         self.mobile_auth_enabled_btn = "./compare_image/mobile_number_auth_enabled_btn.png"
         self.mobile_auth_active_btn = "./compare_image/mobile_number_auth_active_btn.png"

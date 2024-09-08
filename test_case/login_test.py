@@ -1,148 +1,184 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from appium.webdriver.common.appiumby import AppiumBy
 from utils.utils import *
+from config.selectors import Selectors
+from home_test import Home
+import time
 
 
 class Login:
     def __init__(self, driver):
-        self.driver = driver
-        self.id_value = "1111111111"
-        self.pw_value = "test12!@"
-        self.lock_id = "1234562"
-        self.withdrawal_id = "withdrawal"
-        self.view_class_name = "android.view.View"
+        # self.driver = driver
         self.utils= Utils(driver)
-    
+        self.home = Home(driver)
+        self.selector = Selectors()
+        
     def test_run(self):
-        self.test_login_page_ui_check()
-        # self.test_login_description_check()
+        # self.test_login_page_ui_check()
+        # self.test_edit_description_check()
         # self.test_non_register_user_login()
         # self.test_different_password()
         # self.test_lock_user()
         # self.test_withdrawal_user()
-        # self.test_login_sucess()
-        # self.test_save_user_id()
-            
-    def test_login_page_ui_check(self):
-        view_list = self.utils.get_all_elements("android.view.View")
-        btn_list = self.utils.get_all_elements("android.widget.Button")
-        image_list = self.utils.get_all_elements("android.widget.ImageView")
-        
-        self.utils.compare_image(image_list[0],"test.png")
-        
-        for i,element in enumerate(view_list):
-            print(i)
-            print(element)
-        for i,element in enumerate(btn_list):
-            print(i)
-            print(element)
-        for i,element in enumerate(image_list):
-            print(i)
-            print(element)
-        
-        
+        # self.test_password_hidden()
+        self.test_save_user_id()
     
-    def test_login_description_check(self):
-        self.edit_data_input("","")
-        id_desc = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("로그인 아이디를 입력해 주세요.")')))
-        pw_desc = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("비밀번호를 입력해주세요")')))
+    def edit_data_input(self, id,pw):
+        image_list = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
+        edit_list = self.utils.get_all_elements(self.selector.EDIT_CLASS_NAME)
+        edit_list[0].click()
+        edit_list[0].send_keys("")
+        edit_list[0].send_keys(id)
+        edit_list[1].click()
+        edit_list[1].send_keys("")
+        edit_list[1].send_keys(pw)
+        image_list[0].click()
+    
+    def test_login_page_ui_check(self):
+        text_list = []
+        test_compare_list = ['로그인', '아이디 저장', '자동 로그인', '회원가입 ']
+        btn_index = None
+        view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
+        image_list = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
+        edit_list = self.utils.get_all_elements(self.selector.EDIT_CLASS_NAME)
         
-        assert id_desc.get_attribute("contentDescription") == "로그인 아이디를 입력해 주세요.", "id edit description Fail"
-        assert pw_desc.get_attribute("contentDescription") == "비밀번호를 입력해주세요", "password edit description Fail"
-        self.login_btn.click()
+        logo_compare_result = self.utils.compare_image("element_image.png",image_list[0],"login_logo.png")
+        
+        id_edit_compare_result = self.utils.compare_image("element_image.png",edit_list[0],"login_id_edit.png")
+        password_edit_compare_result = self.utils.compare_image("element_image.png",edit_list[1],"login_password_edit.png")
+
+        for i,element in enumerate(view_list):
+            element_desc = element.get_attribute("contentDescription")
+            if element_desc != '' and element_desc != ' ':
+                text_list.append(element_desc)
+            if element_desc == "로그인":
+                btn_index = i
+        login_btn_compare_result = self.utils.compare_image("element_image.png", view_list[btn_index],"login_btn.png")
+            
+        assert logo_compare_result, "login logo image ui test Fail"
+        assert id_edit_compare_result, "login id edit ui test Fail"
+        assert password_edit_compare_result, "login password edit ui test Fail"
+        assert login_btn_compare_result, "login button ui test Fail"
+        assert text_list == test_compare_list, "login text ui test Fail"
+
+        
+    def test_edit_description_check(self):
+        view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
+        login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
+        
+        self.edit_data_input("test","")
+        login_btn.click()
+        assert "비밀번호를 입력해주세요" in view_list[5].get_attribute("contentDescription"),"login password description test Fail"
+        
+        self.edit_data_input("","test")
+        assert "로그인 아이디를 입력해 주세요." in view_list[4].get_attribute("contentDescription") ,"login id description test Fail"
+       
+        self.edit_data_input("","")
+        
+        assert (
+            "로그인 아이디를 입력해 주세요." in view_list[4].get_attribute("contentDescription") and
+            "비밀번호를 입력해주세요" in view_list[6].get_attribute("contentDescription")
+            ), "login id and password description test fail"
 
     def test_non_register_user_login(self):
-        self.edit_data_input("error", "error")
+        self.edit_data_input("error","error")
+        view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
+        login_btn = self.utils.get_element_by_content_desc(view_list,"로그인")
+        login_btn.click()
+        popup_desc = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
+        popup_btn = self.utils.get_all_elements(self.selector.BUTTON_CLASS_NAME)
+        assert popup_desc[0].get_attribute("contentDescription") == "가입된 회원이 아닙니다.", "non register user login popup description test Fail"
+        popup_btn[0].click()
         
-        self.login_btn.click()
-        
-        non_register_popup = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView").instance(0)')))
-        close_btn = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.Button").instance(0)')))
-        assert non_register_popup.get_attribute("contentDescription") == "가입된 회원이 아닙니다.", "non-register popup desc check Fail"
-        close_btn.click()
-            
     def test_different_password(self):
-        self.edit_data_input(self.id_value, "test")
-        self.login_btn.click()
+        sucess_id = self.utils.get_data_json("sucess_id")
+        sucess_pw = self.utils.get_data_json("sucess_password")
+        self.edit_data_input(sucess_id, "test")
+        view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
+        login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
+        login_btn.click()
         
-        popup_elements = self.return_popup()
+        popup_desc = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
+        popup_close_btn = self.utils.get_all_elements(self.selector.BUTTON_CLASS_NAME)
         
-        content_desc = popup_elements[0].get_attribute("contentDescription").strip()
-        
-        assert "비밀번호" in content_desc, f"Check if '비밀번호' is in contentDescription: {'비밀번호' in content_desc}"
-        popup_elements[1].click()
+        assert "비밀번호" in popup_desc[0].get_attribute("contentDescription"), "different password popup description test Fail"
+        popup_close_btn[0].click()
+        assert "아이디와 비밀번호를 확인해 주세요." in view_list[4].get_attribute("contentDescription"), "different password edit description test Fail"
     
     def test_lock_user(self):
-        self.edit_data_input(self.lock_id,self.pw_value)
-        self.login_btn.click()
+        lock_id = self.utils.get_data_json("lock_id")
+        lock_pw = self.utils.get_data_json("sucess_password")
+        self.edit_data_input(lock_id, lock_pw)
         
-        popup_elements = self.return_popup()
-        content_desc = popup_elements[0].get_attribute("contentDescription").strip()
-
-        assert content_desc == "로그인실패횟수5회가되어로그인이불가합니다.", f"Check if '로그인실패' is in contentDescription: {'로그인실패' in content_desc}"
-        popup_elements[1].click()
+        view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
+        login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
+        login_btn.click()
+        
+        popup_desc = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
+        compare_desc = "로그인 실패 횟 수 5회가 되어 로그인이 불가 합니다."
+        assert compare_desc in popup_desc[0].get_attribute("contentDescription"), "lock user login test Fail"
 
     def test_withdrawal_user(self):
-        self.edit_data_input(self.withdrawal_id, self.pw_value)
-        self.login_btn.click()
+        withdrawal_id = self.utils.get_data_json("withdrawal_id")
+        withdrawal_password = self.utils.get_data_json("sucess_password")
+        self.edit_data_input(withdrawal_id, withdrawal_password)
         
-        popup_elements = self.return_popup()
-        content_desc = popup_elements[0].get_attribute("contentDescription").strip()
-        assert content_desc == "탈퇴처리가 되어 로그인이 불가합니다.",f"Check if '탈퇴회원' is in contentDescription: {'탈퇴처리' in content_desc}"
-        popup_elements[1].click()
+        view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
+        login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
+        
+        
+        login_btn.click()
+        
+        popup_desc = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
+        popup_close_btn = self.utils.get_all_elements(self.selector.BUTTON_CLASS_NAME)
+        compare_desc = "탈퇴처리가 되어 로그인이 불가합니다."
+        
+        assert compare_desc in popup_desc[0].get_attribute("contentDescription"), "withdrawal user login test Fail"
+        popup_close_btn[0].click()
     
-    def test_login_sucess(self):
-        self.edit_data_input(self.id_value, self.pw_value) 
-        password_hide_btn = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.Button").instance(0)')))
-        
-        self.login_btn.click()
 
     def test_password_hidden(self):
-        self.edit_data_input(self.id_value, self.pw_value)
+        sucess_id = self.utils.get_data_json("sucess_id")
+        sucess_password = self.utils.get_data_json("sucess_password")
+        self.edit_data_input(sucess_id, sucess_password)
+        
+        btn_list = self.utils.get_all_elements(self.selector.BUTTON_CLASS_NAME)
+        edit_list = self.utils.get_all_elements(self.selector.EDIT_CLASS_NAME)
+        
+        edit_value = edit_list[1].get_attribute("text")
+        
+        if not "••" in edit_value:
+            btn_list[0].click()
+        time.sleep(0.5)
+        
+        hidden_btn_compare = self.utils.compare_image("element_image.png", btn_list[0], "hidden_btn.png")
+        assert hidden_btn_compare, "password hidden btn ui test Fail"
+
+        if "••" in edit_value:
+            btn_list[0].click()
+        time.sleep(0.5)
+        
+        hidden_active_compare = self.utils.compare_image("element_image.png", btn_list[0], "hidden_btn_active.png")
+        assert hidden_active_compare, "password hidden btn active ui test Fail"
+        btn_list[0].click()
+          
+
+    def test_login_sucess(self):
+        sucess_id = self.utils.get_data_json("sucess_id")
+        sucess_password = self.utils.get_data_json("sucess_password")
+        self.edit_data_input(sucess_id, sucess_password)
+        
+        view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
+        login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
+        login_btn.click()
 
     def test_save_user_id(self):
-        self.edit_data_input(self.id_value, self.pw_value)
-        id_save_btn = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.CheckBox").instance(0)')))
-        check_value = id_save_btn.get_attribute("checked")
-
-        if check_value == "false":
-            id_save_btn.click()
+        checkbox_list = self.utils.get_all_elements(self.selector.CHECKBOX_CLASS_NAME)
         
-        self.login_btn.click()
+        if not checkbox_list[0].is_enabled():
+            checkbox_list[0].click()
+        self.test_login_sucess()
+        self.home.logout()
         
-        self.logout_user()
-        assert self.id_edit.get_attribute("text") == self.id_value, "id edit text check Fail"
+    def test_automatic_login(self):
         
-        self.edit_data_input(self.id_value, self.pw_value)
-        if check_value != "false":
-            id_save_btn.click()
-        self.login_btn.click()
         
-        self.logout_user()
-        assert self.id_edit.get_attribute("text") == "", "id edit text check Fail"
-    
-    def logout_user(self):
-        setting_btn = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.ImageView").instance(0)')))
-        setting_btn.click()
-        
-        login_menu = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("로그인")')))
-        login_menu.click()
-        
-        logout_btn = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("로그아웃")')))
-        logout_btn.click()
-        
-        logout_popup_btn = WebDriverWait(self.driver, 5).until(
-            EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.Button").instance(1)')))
-        logout_popup_btn.click()
-        
+        return
