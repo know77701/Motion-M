@@ -34,29 +34,34 @@ class Utils:
             EC.presence_of_all_elements_located((AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().className("{class_name}")')))
         
     def compare_image(self, file_name ,element, compare_image):
-        
-        element_screenshot = element.screenshot_as_png
-        with open(file_name, "wb") as file:
-            file.write(element_screenshot)
-        
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        
-        compare_image_path = os.path.join(current_dir, '../compare_image', compare_image)
-        
-        img1 = cv2.imread(compare_image_path)
-        img2 = cv2.imread(file_name)
+        try:
+            element_screenshot = element.screenshot_as_png
+            with open(file_name, "wb") as file:
+                file.write(element_screenshot)
+            
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            
+            compare_image_path = os.path.join(current_dir, '../compare_image', compare_image)
+            
+            img1 = cv2.imread(compare_image_path)
+            img2 = cv2.imread(file_name)
 
-        if img1 is None or img2 is None:
-            print("Error: One of the images could not be read.")
-            return False
-        
-        img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-        img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
-        
-        
-        difference = cv2.absdiff(img1_gray, img2_gray)
-        result = not np.any(difference)
-        return result
+            if img1 is None or img2 is None:
+                print("Error: One of the images could not be read.")
+                return False
+            
+            img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+            img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+            
+            
+            difference = cv2.absdiff(img1_gray, img2_gray)
+            result = not np.any(difference)
+            return result
+        except cv2.error as e:
+            if e.code == -209: 
+                return False
+            else:
+                raise
     
     def get_element_by_content_desc(self, elements, content_desc):
         for element in elements:
@@ -74,9 +79,13 @@ class Utils:
         return popup_elements
     
     def get_data_json(self, data_vlaue):
-        
         file_path = os.path.join(os.path.dirname(__file__), '../data/test_data.json')
         with open(file_path, 'r') as file:
             data = json.load(file)
 
         return data.get(data_vlaue)
+    
+    def get_element_list_print(self, class_name):
+        element_list = self.get_all_elements(class_name)
+        for i,el in enumerate(element_list):
+            print(f'{class_name} / {i} = {el.get_attribute("contentDescription")}')

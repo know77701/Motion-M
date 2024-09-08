@@ -4,3 +4,4 @@ class Selectors:
     CHECKBOX_CLASS_NAME = "android.widget.CheckBox"
     EDIT_CLASS_NAME = "android.widget.EditText"
     IMAGE_CLASS_NAME = "android.widget.ImageView"
+    PACKAGE_NAME = "com.triupcorp.motionm"
