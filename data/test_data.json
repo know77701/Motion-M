@@ -1,0 +1,10 @@
+{
+    "options.platform_name": "Android",
+    "options.platform_version": "13",
+    "options.device_name": "emulator-5554",
+    "options.automation_name": "UiAutomator2",
+    "self.id_value": "1111111111",
+    "self.pw_value": "test12!@",
+    "self.lock_id": "1234562",
+    "self.withdrawal_id": "withdrawal"
+}

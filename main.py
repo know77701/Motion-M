@@ -12,16 +12,13 @@ class mainTest(unittest.TestCase):
         # app = os.path.abspath(app)
 
         options = UiAutomator2Options()
+        
         options.platform_name = "Android"
         options.platform_version = "13"
         options.device_name = "emulator-5554"
         options.automation_name = "UiAutomator2"
+        
         # options.app = "C:/works/Motion_M/motionm_240809.apk"
-        self.view_class_name = "android.view.View"
-        self.button_class_name = "android.widget.Button"
-        self.checkbox_class_name = "android.widget.CheckBox"
-        self.edit_class_name = "android.widget.EditText"
-        self.image_class_name = "android.widget.ImageView"
         
 
         self.driver = webdriver.Remote(command_executor='http://127.0.0.1:4723', options=options)

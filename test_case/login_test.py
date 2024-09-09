@@ -8,11 +8,6 @@ from utils.utils import *
 class Login:
     def __init__(self, driver):
         self.driver = driver
-        self.id_value = "1111111111"
-        self.pw_value = "test12!@"
-        self.lock_id = "1234562"
-        self.withdrawal_id = "withdrawal"
-        self.view_class_name = "android.view.View"
         self.utils= Utils(driver)
     
     def test_run(self):
