@@ -1,3 +1,5 @@
+from utils.utils import Utils
+from config.selectors import Selectors
 
 class SignUp:
     TITLE_CONTENT = [
@@ -31,16 +33,13 @@ class SignUp:
     def __init__(self, driver):
         self.driver = driver
         self.btn_screenshot = "button_screenshot.png"
-        self.enabled_btn = "./compare_image/button_screenshot_enabled.png"
+        self.enabled_btn = "./compare_image/`button`_screenshot_enabled.png"
         self.active_btn = "./compare_image/button_screenshot_active.png"
         self.mobile_auth_enabled_btn = "./compare_image/mobile_number_auth_enabled_btn.png"
         self.mobile_auth_active_btn = "./compare_image/mobile_number_auth_active_btn.png"
         self.already_registered_number = '01074417631'
-        self.view_class_name = "android.view.View"
-        self.button_class_name = "android.widget.Button"
-        self.checkbox_class_name = "android.widget.CheckBox"
-        self.edit_class_name = "android.widget.EditText"
-        self.image_class_name = "android.widget.ImageView"
+        self.utils = Utils(driver)
+        self.selectors = Selectors()
         # self.sign_up_btn = WebDriverWait(self.driver, 5).until(
         #     EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().description("회원가입 ")')))
         # self.sign_up_btn.click()
@@ -54,7 +53,7 @@ class SignUp:
     def test_checkbox_control(self):
         self.test_select_checkbox()
         self.test_all_check_checkbox()
-        btn_elements = self.get_all_elements(self.button_class_name)
+        btn_elements = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         btn_elements[1].click()
  
     def test_mobile_auth(self):
@@ -68,7 +67,7 @@ class SignUp:
     
     def test_detail_ui_check(self):
         element_list = []
-        view_elements = self.get_all_elements(self.view_class_name)
+        view_elements = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         
         for i, element in enumerate(view_elements):
             content_desc = element.get_attribute("contentDescription")
@@ -87,8 +86,8 @@ class SignUp:
         
         if essential_service_detail is not None and essential_user_detail is not None and select_service_detail is not None:
             essential_service_detail.click()
-            service_detail_page = self.get_all_elements(self.view_class_name)
-            service_btn_elements = self.get_all_elements(self.button_class_name)
+            service_detail_page = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            service_btn_elements = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
             service_detail_back_btn = self.get_element_by_content_desc(service_btn_elements, "Back")
             for element in service_detail_page:
                 content_desc = element.get_attribute("contentDescription")
@@ -98,8 +97,8 @@ class SignUp:
                     break
                 
             essential_user_detail.click()
-            user_detail_page = self.get_all_elements(self.view_class_name)
-            user_btn_elements = self.get_all_elements(self.button_class_name)
+            user_detail_page = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            user_btn_elements = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
             user_detail_back_btn = self.get_element_by_content_desc(user_btn_elements, "Back")
             
             for element in user_detail_page:
@@ -110,8 +109,8 @@ class SignUp:
                     break
         
             select_service_detail.click()
-            select_service_detail_page = self.get_all_elements(self.view_class_name)
-            select_btn_elements = self.get_all_elements(self.button_class_name)
+            select_service_detail_page = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            select_btn_elements = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
             service_desc_list = []
             
             select_back_btn = self.get_element_by_content_desc(select_btn_elements, "Back")
@@ -130,7 +129,7 @@ class SignUp:
         
     def test_select_checkbox(self):
         check_box_elements = self.get_all_elements("")
-        btn_elements = self.get_all_elements(self.button_class_name)
+        btn_elements = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         
         index_sets = [[3],[1],[2],[3, 1],[3, 2],[1, 2]]
         
@@ -154,8 +153,8 @@ class SignUp:
 
 
     def test_all_check_checkbox(self):
-        check_box_elements = self.get_all_elements(self.checkbox_class_name)
-        btn_elements = self.get_all_elements(self.button_class_name)
+        check_box_elements = self.get_all_elements(self.selectors.CHECKBOX_CLASS_NAME)
+        btn_elements = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
 
         self.toggle_all_checkboxes_and_verify(check_box_elements[0], check_box_elements[1:], btn_elements)
         btn_elements[1].click()
@@ -176,8 +175,8 @@ class SignUp:
 
         
     def test_mobile_auth_ui_check(self):
-        view_list = self.get_all_elements(self.view_class_name)
-        btn_list = self.get_all_elements(self.button_class_name)
+        view_list = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         element_desc_arr = ([el.get_attribute("contentDescription") for el in view_list if el.get_attribute("contentDescription") and 
                             el.get_attribute("contentDescription") != ' '])
 
@@ -187,11 +186,11 @@ class SignUp:
         assert compare_result, "Mobile auth button UI check failed."
     
     def test_edit_description_check(self):
-        btn_list = self.get_all_elements(self.button_class_name)
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         
         btn_list[1].click()
         
-        view_list = self.get_all_elements(self.view_class_name)
+        view_list = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         
         compare_list = ['이름을 입력해주세요', '휴대폰 번호를 입력하세요.']
         element_desc_arr = ([el.get_attribute("contentDescription") for el in view_list if el.get_attribute("contentDescription") and 
@@ -203,7 +202,7 @@ class SignUp:
         
     def edit_send_data(self, user_name, mobile_number):
         edit_list = self.get_all_elements("")
-        btn_list = self.get_all_elements(self.button_class_name)
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         
         for i,elements in enumerate(edit_list):
             elements.click()
@@ -214,7 +213,7 @@ class SignUp:
                 break
             
         btn_list[1].click()
-        popup_element = self.get_all_elements(self.image_class_name)
+        popup_element = self.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         return popup_element
     
     def test_signup_with_registered_phone_number(self):
@@ -223,24 +222,24 @@ class SignUp:
         for element in popup_element:
             assert "이미 등록된 핸드폰번호 입니다." in element.get_attribute("contentDescription"), "Popup message is not as expected."
         
-        popup_btn_list = self.get_all_elements(self.button_class_name)
+        popup_btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         popup_btn_list[0].click()
         
-        btn_list = self.get_all_elements(self.button_class_name)
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         assert btn_list[1].get_attribute("contentDescription")=="인증요청", "auth button description Fail"
             
-        btn_list = self.get_all_elements(self.button_class_name)
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         compare_result = self.compare_image(btn_list[2], self.mobile_auth_enabled_btn)
         assert compare_result, "Non authcation test Fail"
     
     def test_auth_description_check(self):
         self.edit_send_data("테스트", "01000009412")
 
-        popup_btn_list = self.get_all_elements(self.button_class_name)
+        popup_btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         popup_btn_list[0].click()
         
-        btn_list = self.get_all_elements(self.button_class_name)
-        edit_list = self.get_all_elements(self.edit_class_name)
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        edit_list = self.get_all_elements(self.selectors.EDIT_CLASS_NAME)
         
         btn_list[2].click()
         
@@ -249,7 +248,7 @@ class SignUp:
 
         edit_list[2].click()
         edit_list[2].send_keys("")
-        view_list = self.get_all_elements(self.view_class_name)
+        view_list = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         assert "인증번호를 입력하세요" in view_list[12].get_attribute("contentDescription"), "auth number input description Fail"
         
         
@@ -261,11 +260,11 @@ class SignUp:
     
     def test_sucess_authcation(self):
         self.edit_send_data("테스트", "01000009412")
-        popup_btn_list = self.get_all_elements(self.button_class_name)
+        popup_btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         popup_btn_list[0].click()
         
-        btn_list = self.get_all_elements(self.button_class_name)
-        edit_list = self.get_all_elements(self.edit_class_name)
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        edit_list = self.get_all_elements(self.selectors.EDIT_CLASS_NAME)
         
         auth_number = input("auth number : ")
         edit_list[2].click()
@@ -277,14 +276,14 @@ class SignUp:
     #     return content.replace("\n", "").replace(" ", "")
 
     def test_validate_job_ui_check(self):
-        view_list = self.get_all_elements(self.view_class_name)
-        btn_list = self.get_all_elements(self.button_class_name)
+        view_list = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         
         assert view_list[4].get_attribute("contentDescription") == "회원가입", "test_validate_job_ui_check job validate ui Fail"
         self.compare_and_assert(view_list[5],"./compare_image/validate_doctor.png", "test_validate_job_ui_check doctor element ui Fail")
         self.compare_and_assert(view_list[6],"./compare_image/validate_employee.png", "test_validate_job_ui_check employee element ui Fail")
         
-        check_box_elements = self.get_all_elements(self.checkbox_class_name)
+        check_box_elements = self.get_all_elements(self.selectors.CHECKBOX_CLASS_NAME)
         
         self.click_and_verify(check_box_elements[0], view_list[5], "./compare_image/validate_doctor_active.png", "test_validate_job_ui_check doctor active element ui Fail")
         self.click_and_verify(check_box_elements[1], view_list[6], "./compare_image/validate_employee_active.png", "test_validate_job_ui_check employee active element ui Fail")
@@ -317,12 +316,12 @@ class SignUp:
 
 
     def test_user_information_ui_check(self):
-        view_list = self.get_all_elements(self.view_class_name)
+        view_list = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         view_arr = self.get_element_descriptions(view_list)
 
-        self.scroll_action(self.button_class_name, "회원가입")
+        self.scroll_action(self.selectors.BUTTON_CLASS_NAME, "회원가입")
 
-        view_list = self.get_all_elements(self.view_class_name)
+        view_list = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         desc_list = self.get_element_descriptions(view_list)
 
         view_arr = list(set(view_arr + desc_list))
@@ -347,20 +346,19 @@ class SignUp:
         assert view_arr == view_compare_arr, "test_user_information_ui_check ui text check Fail"
         
     def test_description_check(self):
-        view_list = self.get_all_elements(self.view_class_name)
+        view_list = self.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         
 
-        self.scroll_action(self.button_class_name, "회원가입")
-        btn_list = self.get_all_elements(self.button_class_name)
+        self.scroll_action(self.selectors.BUTTON_CLASS_NAME, "회원가입")
+        btn_list = self.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         btn_list[5].click()
         
-        self.scroll_action(self.button_class_name, "중복확인")
+        self.scroll_action(self.selectors.BUTTON_CLASS_NAME, "중복확인")
         
         for i,element in enumerate(view_list):
             desc = element.get_attribute("contentDescription")
             print(i)
             print(desc)
-        
     
     def test_popup_descripition_check(self):
         return

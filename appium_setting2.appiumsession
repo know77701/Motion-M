@@ -9,7 +9,7 @@
     {
       "type": "text",
       "name": "appium:platformVersion",
-      "value": "13"
+      "value": "15"
     },
     {
       "type": "text",
