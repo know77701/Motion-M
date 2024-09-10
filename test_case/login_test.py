@@ -44,10 +44,10 @@ class Login:
         
         
         # self.utils.get_element_list_print(image_list)
-        logo_compare_result = self.utils.compare_image("logo.png",image_list[0],"login_logo.png")
+        logo_compare_result = self.utils.compare_image("logo.png",image_list[0],"login_logo.png","login")
         
-        id_edit_compare_result = self.utils.compare_image("id_edit.png",edit_list[0],"login_id_edit.png")
-        password_edit_compare_result = self.utils.compare_image("pw_edit.png",edit_list[1],"login_password_edit.png")
+        id_edit_compare_result = self.utils.compare_image("id_edit.png",edit_list[0],"login_id_edit.png","login")
+        password_edit_compare_result = self.utils.compare_image("pw_edit.png",edit_list[1],"login_password_edit.png","login")
 
         for i,element in enumerate(view_list):
             element_desc = element.get_attribute("contentDescription")
@@ -55,7 +55,7 @@ class Login:
                 text_list.append(element_desc)
             if element_desc == "로그인":
                 btn_index = i
-        login_btn_compare_result = self.utils.compare_image("btn.png", view_list[btn_index],"login_btn.png")
+        login_btn_compare_result = self.utils.compare_image("btn.png", view_list[btn_index],"login_btn.png","login")
         
         assert logo_compare_result, "login logo image ui test Fail"
         assert id_edit_compare_result, "login id edit ui test Fail"
@@ -152,14 +152,14 @@ class Login:
             btn_list[0].click()
         time.sleep(1)
         
-        hidden_btn_compare = self.utils.compare_image("element_image.png", btn_list[0], "hidden_btn.png")
+        hidden_btn_compare = self.utils.compare_image("element_image.png", btn_list[0], "hidden_btn.png","login")
         assert hidden_btn_compare, "password hidden btn ui test Fail"
 
         if "••" in edit_value:
             btn_list[0].click()
         time.sleep(1)
         
-        hidden_active_compare = self.utils.compare_image("element_image.png", btn_list[0], "hidden_btn_active.png")
+        hidden_active_compare = self.utils.compare_image("element_image.png", btn_list[0], "hidden_btn_active.png","login")
         assert hidden_active_compare, "password hidden btn active ui test Fail"
         btn_list[0].click()
           
@@ -195,7 +195,7 @@ class Login:
             
     def test_automatic_login(self):
         checkbox_list = self.utils.get_all_elements(self.selector.CHECKBOX_CLASS_NAME)
-        checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_enabled.png")
+        checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_enabled.png","login")
         
         if checkbox_status:
             checkbox_list[1].click()
@@ -206,13 +206,13 @@ class Login:
         time.sleep(2)
         
         image_list = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
-        logo_compare_result = self.utils.compare_image("element_image.png",image_list[0],"login_logo.png")
+        logo_compare_result = self.utils.compare_image("element_image.png",image_list[0],"login_logo.png","login")
         assert not logo_compare_result, "automation login test Fail"
 
         self.home.test_logout()
         time.sleep(2)
 
-        checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_active.png")
+        checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_active.png","login")
 
         if checkbox_status:
             checkbox_list[1].click()
@@ -221,11 +221,11 @@ class Login:
             self.driver.activate_app(self.selector.PACKAGE_NAME)
             time.sleep(1)
             
-            checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_enabled.png")
+            checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_enabled.png","login")
             
             if checkbox_status:
                 image_list = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
-                logo_compare_result = self.utils.compare_image("element_image.png",image_list[0],"login_logo.png")
+                logo_compare_result = self.utils.compare_image("element_image.png",image_list[0],"login_logo.png","login")
                 assert logo_compare_result, "automation login test Fail"
                 
             else:

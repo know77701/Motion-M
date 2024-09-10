@@ -39,26 +39,31 @@ class Utils:
         element_screenshot = element.screenshot_as_png
         img = Image.open(BytesIO(element_screenshot))
         img.save(file_name, format='PNG')
+        
       
-    def compare_image(self, file_name, element, compare_image):
+    def compare_image(self, file_name, element, compare_image, component):
         try:
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            compare_image_path = os.path.join(current_dir, '../compare_image', compare_image)
-            
+            compare_image_path = os.path.abspath(os.path.join(current_dir, '..', 'public', 'compare_image', component, compare_image))
+            rel_path = os.path.normpath(f'../public/{file_name}')
+            abs_path = os.path.abspath(os.path.join(current_dir, rel_path))
             img1 = cv2.imread(compare_image_path)
+
+            height1, width1 = img1.shape[:2]
+            element_screenshot = element.screenshot_as_png
+            img2 = Image.open(BytesIO(element_screenshot))
+            img2 = img2.resize((width1, height1), Image.Resampling.LANCZOS)
+            img2.save(abs_path, format='PNG')
+            img2 = cv2.imread(abs_path)
 
             if img1 is None:
                 print("Error: The comparison image could not be read.")
                 return False
             
-            height1, width1 = img1.shape[:2]
-            element_screenshot = element.screenshot_as_png
 
-            # img2 = Image.open(BytesIO(element_screenshot))
-            # img2 = img2.resize((width1, height1), Image.Resampling.LANCZOS)
-            # img2.save(file_name, format='PNG')
-            img2 = cv2.imread(file_name)
-
+            if img2 is None:
+                print("Error: The saved image could not be read.")
+                return False
             img1_gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
             img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
@@ -97,3 +102,7 @@ class Utils:
         element_list = self.get_all_elements(class_name)
         for i,el in enumerate(element_list):
             print(f'{class_name} / {i} = {el.get_attribute("contentDescription")}')
+            
+    def element_replace(self, element):
+        replace_element = element.replace("\n", "").replace("\r", "").replace(" ", "")
+        return replace_element

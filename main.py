@@ -1,4 +1,5 @@
 import unittest
+import subprocess
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from test_case.login_test import *
@@ -20,7 +21,6 @@ class mainTest(unittest.TestCase):
         options.device_name = "emulator-5554"
         options.automation_name = "UiAutomator2"
         # options.app = "C:/works/Motion_M/motionm_240809.apk"
-        
         self.driver = webdriver.Remote(command_executor='http://127.0.0.1:4723', options=options)
         self.driver.activate_app(self.selector.PACKAGE_NAME)
 
@@ -47,7 +47,6 @@ class mainTest(unittest.TestCase):
         if self.driver:
             self.driver.quit()
             
-
 if __name__ == '__main__':
     unittest.main()
     
