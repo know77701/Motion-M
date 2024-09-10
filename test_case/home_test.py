@@ -8,8 +8,8 @@ class Home():
         self.selectors = Selectors()
     
     def test_run(self):
-        # self.test_home_page_ui_check()
-        # self.test_profile_image_check()
+        self.test_home_page_ui_check()
+        self.test_profile_image_check()
         self.test_bottom_sheet_action()
     
     def test_home_page_ui_check(self):
