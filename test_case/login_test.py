@@ -42,9 +42,6 @@ class Login:
         view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
         image_list = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
         edit_list = self.utils.get_all_elements(self.selector.EDIT_CLASS_NAME)
-        
-        
-        # self.utils.get_element_list_print(image_list)
         logo_compare_result = self.utils.compare_image("logo.png",image_list[0],"login_logo.png","login")
         
         id_edit_compare_result = self.utils.compare_image("id_edit.png",edit_list[0],"login_id_edit.png","login")
@@ -172,14 +169,14 @@ class Login:
             btn_list[0].click()
         time.sleep(1)
         
-        hidden_btn_compare = self.utils.compare_image("element_image.png", btn_list[0], "hidden_btn.png","login")
+        hidden_btn_compare = self.utils.compare_image("hidden_btn.png", btn_list[0], "hidden_btn.png","login")
         assert hidden_btn_compare, "password hidden btn ui test Fail"
 
         if "••" in edit_value:
             btn_list[0].click()
         time.sleep(1)
         
-        hidden_active_compare = self.utils.compare_image("element_image.png", btn_list[0], "hidden_btn_active.png","login")
+        hidden_active_compare = self.utils.compare_image("hidden_btn_active.png", btn_list[0], "hidden_btn_active.png","login")
         assert hidden_active_compare, "password hidden btn active ui test Fail"
         btn_list[0].click()
           
@@ -215,8 +212,7 @@ class Login:
             
     def test_automatic_login(self):
         checkbox_list = self.utils.get_all_elements(self.selector.CHECKBOX_CLASS_NAME)
-        checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_enabled.png","login")
-        
+        checkbox_status = self.utils.compare_image("automatic_checkbox_enabled.png", checkbox_list[1], "automatic_checkbox_enabled.png","login")
         if checkbox_status:
             checkbox_list[1].click()
         
@@ -233,7 +229,6 @@ class Login:
         time.sleep(2)
 
         checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_active.png","login")
-
         if checkbox_status:
             checkbox_list[1].click()
             self.test_login_sucess()
@@ -241,11 +236,11 @@ class Login:
             self.driver.activate_app(self.selector.PACKAGE_NAME)
             time.sleep(1)
             
-            checkbox_status = self.utils.compare_image("element_image.png", checkbox_list[1], "automatic_checkbox_enabled.png","login")
+            checkbox_status = self.utils.compare_image("logo.png", checkbox_list[1], "automatic_checkbox_enabled.png","login")
             
             if checkbox_status:
                 image_list = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
-                logo_compare_result = self.utils.compare_image("element_image.png",image_list[0],"login_logo.png","login")
+                logo_compare_result = self.utils.compare_image("logo.png",image_list[0],"login_logo.png","login")
                 assert logo_compare_result, "automation login test Fail"
                 
             else:

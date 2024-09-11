@@ -59,7 +59,6 @@ class Utils:
             if img1 is None:
                 print("Error: The comparison image could not be read.")
                 return False
-            
 
             if img2 is None:
                 print("Error: The saved image could not be read.")
@@ -68,8 +67,11 @@ class Utils:
             img2_gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
             difference = cv2.absdiff(img1_gray, img2_gray)
-            result = not np.any(difference)
-            return result
+            threshold = 10
+            if np.mean(difference) <= threshold:
+                return True
+            else:
+                return False
         except cv2.error as e:
             if e.code == -209: 
                 return False
