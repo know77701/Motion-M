@@ -13,6 +13,7 @@ class Login:
         
     def test_run(self):
         self.test_login_page_ui_check()
+        self.test_edit_validation()
         self.test_edit_description_check()
         self.test_non_register_user_login()
         self.test_different_password()
@@ -63,7 +64,28 @@ class Login:
         assert login_btn_compare_result, "login button ui test Fail"
         assert text_list == test_compare_list, "login text ui test Fail"
 
+    def test_edit_validation(self):
+        validation_id = "`가나다~#!@`"
+        validation_pw = "가나다"
+        max_value = "11111111111111111111111"
+        self.edit_data_input(validation_id, validation_pw)
         
+        edit_list = self.utils.get_all_elements(self.selector.EDIT_CLASS_NAME)
+        btn_list = self.utils.get_all_elements(self.selector.BUTTON_CLASS_NAME)
+        
+        id_edit_value = edit_list[0].get_attribute("text")
+        pw_edit_value = edit_list[1].get_attribute("text")
+        if "••" in pw_edit_value:
+            btn_list[0].click()
+        
+        assert id_edit_value != validation_id, "id edit validation test Fail" 
+        assert pw_edit_value != validation_pw, "password edit vaildation test Fail"
+        
+        self.edit_data_input(max_value, max_value)
+        
+        assert id_edit_value != max_value, "id edit max value validation test Fail" 
+        assert pw_edit_value != max_value, "password edit max value vaildation test Fail"
+
     def test_edit_description_check(self):
         view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
         login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
@@ -126,8 +148,6 @@ class Login:
         
         view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
         login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
-        
-        
         login_btn.click()
         
         popup_desc = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)

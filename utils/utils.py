@@ -106,3 +106,13 @@ class Utils:
     def element_replace(self, element):
         replace_element = element.replace("\n", "").replace("\r", "").replace(" ", "")
         return replace_element
+    
+    def bottom_sheet_close(self):
+        window_size = self.driver.get_window_size()
+        width = window_size['width']
+        height = window_size['height']
+
+        center_x = width / 2
+        center_y = height / 2
+
+        self.driver.tap([(center_x, center_y)], 500)
