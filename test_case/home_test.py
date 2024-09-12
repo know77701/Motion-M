@@ -99,6 +99,7 @@ class Home():
         assert self.utils.compare_image("user_card_status_btn.png",btn_list[0],"user_card_status_btn.png","home")
         assert self.utils.compare_image("user_card_org_chart_btn.png",btn_list[1],"user_card_org_chart_btn.png","home")
     
+    
     def test_logout(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         image_list[0].click()
