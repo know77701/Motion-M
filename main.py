@@ -17,7 +17,8 @@ class mainTest(unittest.TestCase):
         self.selector = Selectors()
         
         options.platform_name = "Android"
-        options.platform_version = "13"
+        # options.platform_version = "13"
+        options.platform_version = "15"
         options.device_name = "emulator-5554"
         options.automation_name = "UiAutomator2"
         # options.app = "C:/works/Motion_M/motionm_240809.apk"

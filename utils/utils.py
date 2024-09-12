@@ -118,3 +118,9 @@ class Utils:
         center_y = height / 2
 
         self.driver.tap([(center_x, center_y)], 500)
+    def mouse_click(self):
+        x = 100
+        y = 200
+
+        # 좌표로 클릭
+        self.driver.tap([(x, y)])

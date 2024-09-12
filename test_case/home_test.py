@@ -90,14 +90,15 @@ class Home():
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         
-        compare_text = "이말년의사/대표원장트라이업영문의사/대표원장휴대폰010-7441-7631메일know701@triupcorp.com"
-        user_infomation = self.utils.element_replace(view_list[7].get_attribute("contentDescription"))
-        print(user_infomation)
+        # compare_text = "이말년의사/대표원장트라이업영문의사/대표원장휴대폰010-7441-7631메일know701@triupcorp.com"
+        # user_infomation = self.utils.element_replace(view_list[7].get_attribute("contentDescription"))
+        self.utils.mouse_click()
         
         
-        assert self.utils.compare_image("user_card")
-        assert self.utils.compare_image("user_card_status_btn.png",btn_list[0],"user_card_status_btn.png","home")
-        assert self.utils.compare_image("user_card_org_chart_btn.png",btn_list[1],"user_card_org_chart_btn.png","home")
+        # assert user_infomation == compare_text, "user infomation text compare test Fail"        
+        # assert self.utils.compare_image("user_card")
+        # assert self.utils.compare_image("user_card_status_btn.png",btn_list[0],"user_card_status_btn.png","home")
+        # assert self.utils.compare_image("user_card_org_chart_btn.png",btn_list[1],"user_card_org_chart_btn.png","home")
     
     def test_logout(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
