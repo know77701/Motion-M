@@ -230,7 +230,6 @@ class Home():
         assert view_list[17].get_attribute("contentDescription") == "알람을 일시적으로 끕니다.", "is_notifications_paused sub text compare test Fail"
         
         
-        
     def test_logout(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         image_list[0].click()

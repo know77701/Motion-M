@@ -10,19 +10,25 @@ class Login:
         self.utils= Utils(driver)
         self.home = Home(driver)
         self.selector = Selectors()
-        
+        self.lock_id = self.utils.get_data_json("lock_id")
+        self.sucess_id = self.utils.get_data_json("sucess_id")
+        self.sucess_pw = self.utils.get_data_json("sucess_password")
+        self.withdrawal_id = self.utils.get_data_json("withdrawal_id")
+        self.withdrawal_password = self.utils.get_data_json("sucess_password")
+
     def test_run(self):
-        self.test_login_page_ui_check()
-        self.test_edit_validation()
-        self.test_edit_description_check()
-        self.test_non_register_user_login()
-        self.test_different_password()
-        self.test_lock_user()
-        self.test_withdrawal_user()
-        self.test_password_hidden()
-        self.test_save_user_id()
-        self.test_automatic_login()
-        self.test_login_sucess()
+        # self.test_login_page_ui_check()
+        # self.test_edit_validation()
+        # self.test_edit_description_check()
+        # self.test_non_register_user_login()
+        # self.test_different_password()
+        self.test_user_lock_account()
+        # self.test_lock_user()
+        # self.test_withdrawal_user()
+        # self.test_password_hidden()
+        # self.test_save_user_id()
+        # self.test_automatic_login()
+        # self.test_login_sucess()
     
     def edit_data_input(self, id,pw):
         image_list = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
@@ -112,8 +118,7 @@ class Login:
         popup_btn[0].click()
         
     def test_different_password(self):
-        sucess_id = self.utils.get_data_json("sucess_id")
-        self.edit_data_input(sucess_id, "test")
+        self.edit_data_input(self.sucess_id, "test")
         view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
         login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
         login_btn.click()
@@ -124,24 +129,25 @@ class Login:
         assert "비밀번호" in popup_desc[0].get_attribute("contentDescription"), "different password popup description test Fail"
         popup_close_btn[0].click()
         assert "아이디와 비밀번호를 확인해 주세요." in view_list[4].get_attribute("contentDescription"), "different password edit description test Fail"
-    
-    def test_lock_user(self):
-        lock_id = self.utils.get_data_json("lock_id")
-        lock_pw = self.utils.get_data_json("sucess_password")
-        self.edit_data_input(lock_id, lock_pw)
+
+    def test_user_lock_account(self):        
+        self.edit_data_input(self.lock_id, "error")
         
         view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
+        self.utils.get_element_list_print(self.selector.VIEW_CLASS_NAME)
+        popup_close_btn = self.utils.get_all_elements(self.selector.BUTTON_CLASS_NAME)
         login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
         login_btn.click()
         
         popup_desc = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
-        compare_desc = "로그인 실패 횟 수 5회가 되어 로그인이 불가 합니다."
-        assert compare_desc in popup_desc[0].get_attribute("contentDescription"), "lock user login test Fail"
+        replace_desc = self.utils.element_replace(popup_desc[0].get_attribute("contentDescription"))
+        compare_desc = "로그인실패횟수5회가되어로그인이불가합니다."
+                    
+        assert compare_desc in replace_desc, "lock user login test Fail"
+        popup_close_btn[0].click()
 
     def test_withdrawal_user(self):
-        withdrawal_id = self.utils.get_data_json("withdrawal_id")
-        withdrawal_password = self.utils.get_data_json("sucess_password")
-        self.edit_data_input(withdrawal_id, withdrawal_password)
+        self.edit_data_input(self.withdrawal_id, self.withdrawal_password)
         
         view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
         login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
@@ -156,9 +162,7 @@ class Login:
     
 
     def test_password_hidden(self):
-        sucess_id = self.utils.get_data_json("sucess_id")
-        sucess_password = self.utils.get_data_json("sucess_password")
-        self.edit_data_input(sucess_id, sucess_password)
+        self.edit_data_input(self.sucess_id, self.sucess_pw)
         
         btn_list = self.utils.get_all_elements(self.selector.BUTTON_CLASS_NAME)
         edit_list = self.utils.get_all_elements(self.selector.EDIT_CLASS_NAME)
@@ -181,9 +185,7 @@ class Login:
         btn_list[0].click()
           
     def test_login_sucess(self):
-        sucess_id = self.utils.get_data_json("sucess_id")
-        sucess_password = self.utils.get_data_json("sucess_password")
-        self.edit_data_input(sucess_id, sucess_password)
+        self.edit_data_input(self.sucess_id, self.sucess_pw)
         
         view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
         login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
@@ -199,16 +201,16 @@ class Login:
         
         edit_list = self.utils.get_all_elements(self.selector.EDIT_CLASS_NAME)
         save_edit_value = edit_list[0].get_attribute("text")
-        if save_edit_value == self.utils.get_data_json("sucess_id"):
+        if save_edit_value == self.sucess_id:
             if checkbox_list[0].is_enabled():
                 checkbox_list[0].click()
                 self.test_login_sucess()
                 self.home.test_logout()
                 non_save_edit_value = edit_list[0].get_attribute("text")
-                if non_save_edit_value == self.utils.get_data_json("sucess_id"):
-                    assert edit_list == self.utils.get_data_json("sucess_id"), "user id non save test Fail"
+                if non_save_edit_value == self.sucess_id:
+                    assert edit_list == self.sucess_id, "user id non save test Fail"
         else:
-            assert edit_list == self.utils.get_data_json("sucess_id"), "user id save test Fail"
+            assert edit_list == self.sucess_id, "user id save test Fail"
             
     def test_automatic_login(self):
         checkbox_list = self.utils.get_all_elements(self.selector.CHECKBOX_CLASS_NAME)
