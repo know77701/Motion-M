@@ -8,6 +8,7 @@ import numpy as np
 import os
 import json
 import os
+import subprocess
 
 class Utils:
     def __init__(self, driver):
@@ -45,7 +46,7 @@ class Utils:
         try:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             compare_image_path = os.path.abspath(os.path.join(current_dir, '..', 'public', 'compare_image', component, compare_image))
-            rel_path = os.path.normpath(f'../public/{file_name}')
+            rel_path = os.path.normpath(f'../public/test_data/{component}/{file_name}')
             abs_path = os.path.abspath(os.path.join(current_dir, rel_path))
             img1 = cv2.imread(compare_image_path)
 
@@ -115,12 +116,11 @@ class Utils:
         height = window_size['height']
 
         center_x = width / 2
-        center_y = height / 2
-
+        center_y = height * 0.30
+        
         self.driver.tap([(center_x, center_y)], 500)
-    def mouse_click(self):
-        x = 100
-        y = 200
-
-        # 좌표로 클릭
-        self.driver.tap([(x, y)])
+        
+    def return_value_copy(self):
+        clipboard_content = self.driver.execute_script('mobile: clipboardGet')
+        return clipboard_content
+        
