@@ -129,7 +129,7 @@ class Login:
         assert "비밀번호" in popup_desc[0].get_attribute("contentDescription"), "different password popup description test Fail"
         popup_close_btn[0].click()
         assert "아이디와 비밀번호를 확인해 주세요." in view_list[4].get_attribute("contentDescription"), "different password edit description test Fail"
-
+ 
     def test_user_lock_account(self):        
         self.edit_data_input(self.lock_id, "error")
         

@@ -21,7 +21,7 @@ class Home():
         # self.test_user_card_my_chattroom_open()
         # self.test_user_list_ui_check()
         # self.test_pause_notifications_ui_check()
-        self.test_is_notifications_paused()
+        self.test_is_notifications_paused_ui_check()
     
     def test_home_page_ui_check(self):
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
@@ -215,20 +215,41 @@ class Home():
         assert self.utils.compare_image("automatic_message_response_open.png",image_list[5], "automatic_message_response_open.png", "home"), "automatic_message_response_open ui test Fail"
         self.utils.bottom_sheet_close()
     
-    def test_is_notifications_paused(self):
-        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+    def open_notification(self, index):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
-        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         image_list[2].click()
-        
-        image_list[0].click()
-        self.utils.get_element_list_print(self.selectors.VIEW_CLASS_NAME)
-        self.utils.get_element_list_print(self.selectors.IMAGE_CLASS_NAME)
-        self.utils.get_element_list_print(self.selectors.BUTTON_CLASS_NAME)
-        
+        image_list[index].click()
+    
+    def test_is_notifications_paused_ui_check(self):
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+
+        self.open_notification(0)
+        time.sleep(1)
+
         assert view_list[4].get_attribute("contentDescription") == "알림 일시 정지", "is_notifications_paused title text compare test Fail"
         assert view_list[17].get_attribute("contentDescription") == "알람을 일시적으로 끕니다.", "is_notifications_paused sub text compare test Fail"
+
+        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        assert btn_list[1].get_attribute("contentDescription") == "1시간", "is_notifications_paused 1H menu ui test Fail"
+        assert btn_list[2].get_attribute("contentDescription") == "2시간", "is_notifications_paused 2H menu ui test Fail"
+        assert btn_list[3].get_attribute("contentDescription") == "3시간", "is_notifications_paused 3H menu ui test Fail"
+        assert btn_list[4].get_attribute("contentDescription") == "오전 8시까지", "Notification pause menu UI test failed: 4th button's contentDescription does not match 'Until 8 AM'"
+        assert btn_list[5].get_attribute("contentDescription") == "오전 9시까지", "Notification pause menu UI test failed: 5th button's contentDescription does not match 'Until 9 AM'"
+        assert btn_list[6].get_attribute("contentDescription") == "해제 할 때까지", "Notification pause menu UI test failed: 6th button's contentDescription does not match 'Until turned off'"
         
+        self.set_notifications(1)
+        
+        return_time = self.utils.get_time_with_hour_added(1)
+        self.utils.get_element_list_print(self.selectors.BUTTON_CLASS_NAME)
+        assert return_time in view_list[19].get_attribute("contentDescription"), "notifications_paused time text test Fail"
+        
+        reactivate_notifications_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        reactive_btn_result = self.utils.compare_image("reactivate_notifications.png", reactivate_notifications_btn[7], "reactivate_notifications.png", "home")
+        assert reactive_btn_result, "reactivate_notifications_btn ui check test Fail"
+        
+    def set_notifications(self,index):
+        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        btn_list[index].click()
         
     def test_logout(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
@@ -243,4 +264,16 @@ class Home():
         assert view_list[4].get_attribute("contentDescription") == "로그아웃 하시겠습니까?", "logout popup description test Fail"
         btn_list[1].click()
     
+
+class setting:
     
+    def __init__(self,driver):
+        self.driver = driver
+        self.utils = Utils(driver)
+        self.selectors = Selectors()
+    
+    def test_run(self):
+        return
+    
+    def test_setting_menu_ui_check(self):
+        return

@@ -105,6 +105,7 @@ class Utils:
         element_list = self.get_all_elements(class_name)
         for i,el in enumerate(element_list):
             print(f'{class_name} / {i} = {el.get_attribute("contentDescription")}')
+        return
             
     def element_replace(self, element):
         replace_element = element.replace("\n", "").replace("\r", "").replace(" ", "")
@@ -124,3 +125,15 @@ class Utils:
         clipboard_content = self.driver.execute_script('mobile: clipboardGet')
         return clipboard_content
         
+    def get_time(self):
+        return self.driver.execute_script("mobile: shell", {"command": "date", "args": ["+%H:%M"]})
+    
+    
+    def get_time_with_hour_added(self, index=None):
+        device_time = self.get_time() 
+        hour, minute = map(int, device_time.split(":"))
+        if index:
+            hour = (hour + index) % 24
+            return f"{hour:02d}:{minute:02d}"
+        else:
+            return f"{hour:02d}:{minute:02d}"

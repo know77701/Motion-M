@@ -28,10 +28,10 @@ class mainTest(unittest.TestCase):
         try:
             # sign_up = SignUp(driver=self.driver)
             # sign_up.test_run()
-            login = Login(driver=self.driver)
-            login.test_run()
-            # home = Home(driver=self.driver)
-            # home.test_run()
+            # login = Login(driver=self.driver)
+            # login.test_run()
+            home = Home(driver=self.driver)
+            home.test_run()
         except Exception as e:
             print(f"Error occurred: {e}")
     
