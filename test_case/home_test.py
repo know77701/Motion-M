@@ -14,7 +14,7 @@ class Home():
         # self.test_profile_image_check()
         # self.test_status_bottom_sheet_ui_check()
         # self.test_status_stting()
-        # self.test_user_card_ui_cheek()
+        # self.test_user_card_ui_check()
         # self.test_user_card_status()
         # self.test_user_card_org_chart_oepn()
         # self.test_user_card_value_copy()
@@ -102,7 +102,7 @@ class Home():
         for item in self.status_list:
             self.check_status_setting(btn_element=image_list[1],status=item)
         
-    def test_user_card_ui_cheek(self):
+    def test_user_card_ui_check(self):
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         view_list[7].click()
         
@@ -123,13 +123,9 @@ class Home():
         
     def test_user_card_status(self):
         for element in self.status_list:
-            self.user_card_status(element)
-    
-    def user_card_status(self, status):
-        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
-        
-        self.check_status_setting(view_list[7],btn_list[0],status)
+            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+            self.check_status_setting(view_list[7],btn_list[0],element)
     
     def test_user_card_org_chart_oepn(self):
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
