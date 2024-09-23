@@ -222,9 +222,8 @@ class Home():
     
     def test_is_notifications_paused_ui_check(self):
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-
         self.open_notification(0)
-        time.sleep(1)
+        time.sleep(0.5)
 
         assert view_list[4].get_attribute("contentDescription") == "알림 일시 정지", "is_notifications_paused title text compare test Fail"
         assert view_list[17].get_attribute("contentDescription") == "알람을 일시적으로 끕니다.", "is_notifications_paused sub text compare test Fail"
@@ -238,18 +237,40 @@ class Home():
         assert btn_list[6].get_attribute("contentDescription") == "해제 할 때까지", "Notification pause menu UI test failed: 6th button's contentDescription does not match 'Until turned off'"
         
         self.set_notifications(1)
+        time.sleep(0.5)
+        return_time_compare = self.set_notifications_time_compare(1, view_list[19])
+        reactive_btn_result = self.set_notifications_button_check("reactivate_notifications.png", 7, "home")
+        active_list = self.set_notifications_button_check("active_1hour_list.png", 1, "home")
         
-        return_time = self.utils.get_time_with_hour_added(1)
-        self.utils.get_element_list_print(self.selectors.BUTTON_CLASS_NAME)
-        assert return_time in view_list[19].get_attribute("contentDescription"), "notifications_paused time text test Fail"
-        
-        reactivate_notifications_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
-        reactive_btn_result = self.utils.compare_image("reactivate_notifications.png", reactivate_notifications_btn[7], "reactivate_notifications.png", "home")
+        assert return_time_compare, "notifications_paused time text test Fail"
         assert reactive_btn_result, "reactivate_notifications_btn ui check test Fail"
+        assert active_list, "list setting ui check test Fail"
+        btn_list[0].click()
         
+        image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
+        notifications_icon_compare = self.utils.compare_image("is_notifications_paused_menu_icon.png", image_list[2], "is_notifications_paused_menu_icon.png", "home")
+        assert notifications_icon_compare, "notification icon ui test Fail"
+        
+    
+    def set_notifications_time_compare(self, index, element):
+        return_time = self.utils.get_time_with_hour_added(index)
+        sucess_value = False
+        
+        if return_time in element.get_attribute("contentDescription"):
+            sucess_value = True
+            return sucess_value
+        else:
+            return sucess_value
+        
+    def set_notifications_button_check(self, image_name, btn_index, compoent):
+        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        sucess_value = self.utils.compare_image(image_name, btn_list[btn_index], image_name, compoent)
+        return sucess_value
+    
     def set_notifications(self,index):
         btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         btn_list[index].click()
+        
         
     def test_logout(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)

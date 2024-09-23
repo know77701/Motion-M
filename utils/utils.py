@@ -125,12 +125,8 @@ class Utils:
         clipboard_content = self.driver.execute_script('mobile: clipboardGet')
         return clipboard_content
         
-    def get_time(self):
-        return self.driver.execute_script("mobile: shell", {"command": "date", "args": ["+%H:%M"]})
-    
-    
     def get_time_with_hour_added(self, index=None):
-        device_time = self.get_time() 
+        device_time = self.driver.execute_script("mobile: shell", {"command": "date", "args": ["+%H:%M"]})
         hour, minute = map(int, device_time.split(":"))
         if index:
             hour = (hour + index) % 24
