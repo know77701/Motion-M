@@ -21,6 +21,7 @@ class Home():
         # self.test_user_card_my_chattroom_open()
         # self.test_user_list_ui_check()
         # self.test_pause_notifications_ui_check()
+        # self.test_notifications_paused_list_ui_check()
         self.test_is_notifications_paused_ui_check()
     
     def test_home_page_ui_check(self):
@@ -211,14 +212,11 @@ class Home():
         assert self.utils.compare_image("automatic_message_response_open.png",image_list[5], "automatic_message_response_open.png", "home"), "automatic_message_response_open ui test Fail"
         self.utils.bottom_sheet_close()
     
-    def open_notification(self, index):
+    def test_notifications_paused_list_ui_check(self):
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         image_list[2].click()
-        image_list[index].click()
-    
-    def test_is_notifications_paused_ui_check(self):
-        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        self.open_notification(0)
+        image_list[0].click()
         time.sleep(0.5)
 
         assert view_list[4].get_attribute("contentDescription") == "알림 일시 정지", "is_notifications_paused title text compare test Fail"
@@ -231,36 +229,99 @@ class Home():
         assert btn_list[4].get_attribute("contentDescription") == "오전 8시까지", "Notification pause menu UI test failed: 4th button's contentDescription does not match 'Until 8 AM'"
         assert btn_list[5].get_attribute("contentDescription") == "오전 9시까지", "Notification pause menu UI test failed: 5th button's contentDescription does not match 'Until 9 AM'"
         assert btn_list[6].get_attribute("contentDescription") == "해제 할 때까지", "Notification pause menu UI test failed: 6th button's contentDescription does not match 'Until turned off'"
+        btn_list[0].click()
+
+
+        
+    def test_is_notifications_paused_ui_check(self):
+        self.notification_menu_text_compare("설정안함")
         
         self.set_notifications(1)
-        time.sleep(0.5)
-        return_time_compare = self.set_notifications_time_compare(1, view_list[19])
-        reactive_btn_result = self.set_notifications_button_check("reactivate_notifications.png", 7, "home")
-        active_list = self.set_notifications_button_check("active_1hour_list.png", 1, "home")
+        self.test_notification_resubscribe_button(1)
+        return_1hour_time = self.notifications_paused_list_ui_check(1, "active_1hour_list.png")
+        self.notifications_puased_menu_icon_ui_check()
+        self.notification_menu_text_compare(return_1hour_time)
+
+        self.set_notifications(2)
+        self.test_notification_resubscribe_button(2)
+        return_2hour_time = self.notifications_paused_list_ui_check(2, "active_2hour_list.png")
+        self.notifications_puased_menu_icon_ui_check()
+        self.notification_menu_text_compare(return_2hour_time)
         
-        assert return_time_compare, "notifications_paused time text test Fail"
-        assert reactive_btn_result, "reactivate_notifications_btn ui check test Fail"
-        assert active_list, "list setting ui check test Fail"
-        btn_list[0].click()
+        self.set_notifications(3)
+        self.test_notification_resubscribe_button(3)
+        return_3hour_time = self.notifications_paused_list_ui_check(3, "active_3hour_list.png")
+        self.notifications_puased_menu_icon_ui_check()
+        self.notification_menu_text_compare(return_3hour_time)
+
+        self.set_notifications(4)
+        self.test_notification_resubscribe_button(4)
+        return_8hour_time = self.notifications_paused_list_ui_check(4, "active_8hour_list.png")
+        self.notifications_puased_menu_icon_ui_check()
+        self.notification_menu_text_compare(return_8hour_time)
+ 
+        self.set_notifications(5)
+        self.test_notification_resubscribe_button(5)
+        return_9hour_time = self.notifications_paused_list_ui_check(5, "active_8hour_list.png")
+        self.notifications_puased_menu_icon_ui_check()
+        self.notification_menu_text_compare(return_9hour_time)
         
+        self.set_notifications(6)
+        self.test_notification_resubscribe_button(6)
+        return_time = self.notifications_paused_list_ui_check(6, "active_8hour_list.png")
+        self.notifications_puased_menu_icon_ui_check()
+        self.notification_menu_text_compare(return_time)
+ 
+ 
+    def notifications_paused_list_ui_check(self, btn_number=None, file_name=None):
+        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        
+        if btn_number == 1 or btn_number == 2 or btn_number == 3:
+            return_time = self.utils.get_time_with_hour_added(btn_number)
+            active_time_list = self.set_notifications_button_check(file_name, btn_list[btn_number], "home")
+            assert return_time in view_list[19].get_attribute("contentDescription"), "notifications_paused time text test Fail"
+            assert active_time_list, "list setting ui check test Fail"
+            btn_list[0].click()
+    
+            return return_time
+        else:
+            if btn_number == 4:
+                return_time == "08:00"
+            elif btn_number == 5:
+                return_time == "09:00"
+            elif btn_number == 6:
+                return_time == "해제"
+            active_time_list = self.set_notifications_button_check(file_name, btn_list[btn_number], "home")
+            assert return_time in view_list[19].get_attribute("contentDescription"), "notifications_paused time text test Fail"
+            assert active_time_list, "list setting ui check test Fail"
+            btn_list[0].click()
+            return return_time
+
+    def notifications_puased_menu_icon_ui_check(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         notifications_icon_compare = self.utils.compare_image("is_notifications_paused_menu_icon.png", image_list[2], "is_notifications_paused_menu_icon.png", "home")
         assert notifications_icon_compare, "notification icon ui test Fail"
+ 
         
-    
-    def set_notifications_time_compare(self, index, element):
-        return_time = self.utils.get_time_with_hour_added(index)
-        sucess_value = False
+    def notification_menu_text_compare(self, compare_index):
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         
-        if return_time in element.get_attribute("contentDescription"):
-            sucess_value = True
-            return sucess_value
-        else:
-            return sucess_value
-        
-    def set_notifications_button_check(self, image_name, btn_index, compoent):
+        image_list[2].click()
+        return_menu_text = self.utils.element_replace(view_list[8].get_attribute("contentDescription"))
+        assert compare_index in return_menu_text, f"{return_menu_text} is not in {compare_index} test Fails"
+        image_list[0].click()
+
+    def test_notification_resubscribe_button(self,index):
         btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
-        sucess_value = self.utils.compare_image(image_name, btn_list[btn_index], image_name, compoent)
+        reactive_btn_result = self.set_notifications_button_check("reactivate_notifications.png", btn_list[7], "home")
+        assert reactive_btn_result, "reactivate_notifications_btn ui check test Fail"
+        btn_list[7].click()
+        self.set_notifications(index)
+
+    def set_notifications_button_check(self, image_name, element, compoent):
+        sucess_value = self.utils.compare_image(image_name, element, image_name, compoent)
         return sucess_value
     
     def set_notifications(self,index):
