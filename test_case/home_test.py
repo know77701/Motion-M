@@ -242,12 +242,23 @@ class Home():
         
         notification_time_title = self.utils.element_replace(view_list[4].get_attribute("contentDescription"))
         notification_time_menu_title = self.utils.element_replace(view_list[7].get_attribute("contentDescription"))
+        notification_time_menu_title2 = self.utils.element_replace(switch_list[1].get_attribute("contentDescription"))
         
-        assert notification_time_title == "알림수신시간설정", "notification time title description does not match '알림 수신 시간 설정'"
-        assert notification_time_menu_title == "공휴일알림끄기", "notification time title description does not match '공휴일 알림 끄기'"
-        self.utils.screenshot_image("notification_time_setting_switch.png")
-        self.utils.screenshot_image("weekendotification_switch.png")
-        
+        assert notification_time_title == "알림수신시간", "notification time title description does not match '알림 수신 시간'"
+        assert notification_time_menu_title == "알림수신시간설정", "notification time title description does not match '알림 수신 시간 설정'"
+        assert notification_time_menu_title2 == "공휴일알림끄기", "notification time title description does not match '공휴일 알림 끄기'"
+        assert self.utils.compare_image("notification_time_setting_switch.png", switch_list[0], "notification_time_setting_switch.png", "home")
+        assert self.utils.compare_image("weekendotification_switch.png", switch_list[1], "weekendotification_switch.png", "home")
+        notification_setting_btn = switch_list[0]
+        holiday_setting_btn = switch_list[1]
+    
+        notification_setting_btn.click()
+        holiday_setting_btn.click()
+        image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
+        image_list[0].click()
+        self.utils.get_element_list_print(self.selectors.SWITCH_CLASS_NAME)
+        self.utils.get_element_list_print(self.selectors.VIEW_CLASS_NAME)
+        self.utils.get_element_list_print(self.selectors.IMAGE_CLASS_NAME)
         
     def test_is_notifications_paused_ui_check(self):
         self.notification_menu_text_compare("설정안함")

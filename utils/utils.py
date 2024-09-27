@@ -15,6 +15,7 @@ class Utils:
         self.driver = driver
         self.image_url = "../compare_image/"
     
+
     def scroll_action(self, class_name, description=None):
         if description is not None:
             description_str = f'"{description}"'
@@ -27,6 +28,8 @@ class Utils:
                 f'new UiScrollable(new UiSelector().scrollable(true))'
                 f'.scrollIntoView(new UiSelector().className("{class_name}"))'
             )
+        
+        # self.get_all_elements()
         
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((AppiumBy.ANDROID_UIAUTOMATOR, scrollable_element))
@@ -104,8 +107,7 @@ class Utils:
     def get_element_list_print(self, class_name):
         element_list = self.get_all_elements(class_name)
         for i,el in enumerate(element_list):
-            print(f'{class_name} / {i} = {el.get_attribute("contentDescription")}')
-        return
+            print(f'{class_name} / {i} = {el.get_attribute("contentDescription")} / {el.get_attribute("text")}')
             
     def element_replace(self, element):
         replace_element = element.replace("\n", "").replace("\r", "").replace(" ", "")

@@ -1,5 +1,6 @@
 class Selectors:
     VIEW_CLASS_NAME = "android.view.View"
+    TEXT_VIEW_CLASS_NAME = "android.widget.TextView"
     BUTTON_CLASS_NAME = "android.widget.Button"
     CHECKBOX_CLASS_NAME = "android.widget.CheckBox"
     SWITCH_CLASS_NAME = "android.widget.Switch"
