@@ -36,6 +36,10 @@ class Utils:
         return WebDriverWait(self.driver, 5).until(
             EC.presence_of_all_elements_located((AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().className("{class_name}")')))
     
+    def get_element_by_id(self, auto_id):
+        return WebDriverWait(self.driver, 5).until(
+            EC.presence_of_element_located(AppiumBy.ID, auto_id))
+    
     def screenshot_image(self, file_name, element):
         element_screenshot = element.screenshot_as_png
         img = Image.open(BytesIO(element_screenshot))
@@ -103,9 +107,12 @@ class Utils:
     
     def get_element_list_print(self, class_name):
         element_list = self.get_all_elements(class_name)
-        for i,el in enumerate(element_list):
-            print(f'{class_name} / {i} = {el.get_attribute("contentDescription")}')
-            
+        for i, el in enumerate(element_list):
+            content_desc = el.get_attribute("contentDescription")
+            auto_id = el.get_attribute("resourceId")
+            print(f'{class_name} / {i} = {content_desc}, ID: {auto_id}')
+        return
+                
     def element_replace(self, element):
         replace_element = element.replace("\n", "").replace("\r", "").replace(" ", "")
         return replace_element
@@ -124,3 +131,14 @@ class Utils:
         clipboard_content = self.driver.execute_script('mobile: clipboardGet')
         return clipboard_content
         
+    def get_time(self):
+        return self.driver.execute_script("mobile: shell", {"command": "date", "args": ["+%H:%M"]})
+    
+    def get_time_with_hour_added(self, index=None):
+        device_time = self.get_time() 
+        hour, minute = map(int, device_time.split(":"))
+        if index:
+            hour = (hour + index) % 24
+            return f"{hour:02d}:{minute:02d}"
+        else:
+            return f"{hour:02d}:{minute:02d}"

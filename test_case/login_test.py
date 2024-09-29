@@ -17,18 +17,18 @@ class Login:
         self.withdrawal_password = self.utils.get_data_json("sucess_password")
 
     def test_run(self):
-        # self.test_login_page_ui_check()
-        # self.test_edit_validation()
-        # self.test_edit_description_check()
-        # self.test_non_register_user_login()
-        # self.test_different_password()
+        self.test_login_page_ui_check()
+        self.test_edit_validation()
+        self.test_edit_description_check()
+        self.test_non_register_user_login()
+        self.test_different_password()
         self.test_user_lock_account()
-        # self.test_lock_user()
-        # self.test_withdrawal_user()
-        # self.test_password_hidden()
-        # self.test_save_user_id()
-        # self.test_automatic_login()
-        # self.test_login_sucess()
+        self.test_lock_user()
+        self.test_withdrawal_user()
+        self.test_password_hidden()
+        self.test_save_user_id()
+        self.test_automatic_login()
+        self.test_login_sucess()
     
     def edit_data_input(self, id,pw):
         image_list = self.utils.get_all_elements(self.selector.IMAGE_CLASS_NAME)
@@ -60,6 +60,7 @@ class Login:
             if element_desc == "로그인":
                 btn_index = i
         login_btn_compare_result = self.utils.compare_image("btn.png", view_list[btn_index],"login_btn.png","login")
+        
         
         assert logo_compare_result, "login logo image ui test Fail"
         assert id_edit_compare_result, "login id edit ui test Fail"
@@ -129,12 +130,11 @@ class Login:
         assert "비밀번호" in popup_desc[0].get_attribute("contentDescription"), "different password popup description test Fail"
         popup_close_btn[0].click()
         assert "아이디와 비밀번호를 확인해 주세요." in view_list[4].get_attribute("contentDescription"), "different password edit description test Fail"
-
+ 
     def test_user_lock_account(self):        
         self.edit_data_input(self.lock_id, "error")
         
         view_list = self.utils.get_all_elements(self.selector.VIEW_CLASS_NAME)
-        self.utils.get_element_list_print(self.selector.VIEW_CLASS_NAME)
         popup_close_btn = self.utils.get_all_elements(self.selector.BUTTON_CLASS_NAME)
         login_btn = self.utils.get_element_by_content_desc(view_list, "로그인")
         login_btn.click()
