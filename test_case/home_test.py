@@ -1,6 +1,8 @@
 from utils.utils import Utils
 from config.selectors import Selectors
 import time
+from appium.webdriver.common.appiumby import AppiumBy
+
 
 class Home():
     def __init__(self, driver):
@@ -25,6 +27,7 @@ class Home():
         # self.test_is_notifications_paused_ui_check()
         # self.test_configure_notification_time()
         self.test_auto_message_response()
+        
     
     def test_home_page_ui_check(self):
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
@@ -257,9 +260,6 @@ class Home():
         holiday_setting_btn.click()
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         image_list[0].click()
-        self.utils.get_element_list_print(self.selectors.SWITCH_CLASS_NAME)
-        self.utils.get_element_list_print(self.selectors.VIEW_CLASS_NAME)
-        self.utils.get_element_list_print(self.selectors.IMAGE_CLASS_NAME)
         
     def test_is_notifications_paused_ui_check(self):
         notification_steps = [
@@ -351,19 +351,23 @@ class Home():
         btn_list[index].click()
         
     def test_auto_message_response(self):
-        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
+        # view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        # switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
         
-        self.verify_auto_message_off_title(view_list)
-        self.verify_auto_message_off_ui(view_list, switch_btn)
-        self.set_message_auto_resopnse(switch_btn)
+        # self.verify_auto_message_off_title(view_list)
+        # self.verify_auto_message_off_ui(view_list, switch_btn)
+        # self.set_message_auto_resopnse(switch_btn)
         
-        active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        self.verify_auto_message_on_title(active_setting_view_list)
-        self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
+        # active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        # self.verify_auto_message_on_title(active_setting_view_list)
+        # self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
 
-        self.verify_auto_message_list_menu_modal()
-        self.verify_auto_message_defalut_time_delete()
+        # self.verify_auto_message_list_menu_modal()
+        # self.set_message_auto_resopnse(switch_btn)
+        
+        # self.menu_back_btn_click()
+        self.auto_message_time_update()
+
         
     def verify_auto_message_off_title(self, view_list):
         auto_message_response_title = view_list[4].get_attribute("contentDescription")
@@ -413,6 +417,10 @@ class Home():
         self.verify_auto_message_modal_ui(view_list, btn_list)
         self.verify_auto_message_defalut_time_delete(btn_list[1])
     
+    def menu_back_btn_click(self):
+        back_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
+        back_btn.click()
+        
     def auto_message_setting_list_menu_oepn(self):
         setting_menu_btn = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)[0]
         setting_menu_btn.click()
@@ -428,7 +436,6 @@ class Home():
         update_btn_ui_compare = self.utils.compare_image("auto_message_menu_modal_update_btn.png", btn_list[0], "auto_message_menu_modal_update_btn.png", "home")
         delete_btn_ui_compare = self.utils.compare_image("auto_message_menu_modal_delete_btn.png", btn_list[1], "auto_message_menu_modal_delete_btn.png", "home")
         modal_ui_compare = self.utils.compare_image("auto_message_menu_modal.png", view_list[6], "auto_message_menu_modal.png", "home")
-        
         assert modal_ui_compare, "메시지 자동 응답 모달 UI 비교 테스트 실패"
         assert update_btn_ui_compare, "메시지 자동 응답 모달 업데이트 버튼 UI 비교 테스트 실패"
         assert delete_btn_ui_compare, "메시지 자동 응답 모달 삭제 버튼 UI 비교 테스트 실패"
@@ -445,18 +452,132 @@ class Home():
         update_btn.click()
 
     def auto_message_time_update(self):
-        self.auto_message_setting_list_menu_oepn()
-        self.auto_message_time_update_menu_open()
-        
-        self.utils.get_element_list_print(self.selectors.VIEW_CLASS_NAME)
-        self.utils.get_element_list_print(self.selectors.BUTTON_CLASS_NAME)
-        self.utils.get_element_list_print(self.selectors.IMAGE_CLASS_NAME)
+        update_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
+        menu_active_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
+        # self.set_message_auto_resopnse(menu_active_btn)
+        # self.auto_message_setting_list_menu_oepn()
+        # self.auto_message_time_update_menu_open(update_btn)
+        self.verify_auto_message_time_update_page()
 
-    def verify_auto_time_update_title(self):
-        return
-    
-    def verify_auto_time_update_ui(self):
+    def verify_auto_message_time_update_page(self):
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        checkbox_list = self.utils.get_all_elements(self.selectors.CHECKBOX_CLASS_NAME)
+        image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
+        switch_list = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)
         
+        # self.verify_auto_message_update_title(view_list, image_list)
+        # self.verify_auto_message_update_ui(view_list, image_list, switch_list, checkbox_list)
+        # day_list = [
+        #     'enabled_mon_day.png',
+        #     'enabled_tue_day.png',
+        #     'enabled_wen_day.png',
+        #     'enabled_thu_day.png',
+        #     'enabled_fri_day.png',
+        #     'enabled_sta_day.png',
+        #     'enabled_sun_day.png',
+        # ]
+        # self.auto_message_select_all_day_select(checkbox_list, day_list)
+        # self.verify_auto_message_none_day_select(checkbox_list)
+        self.auto_message_update_time_setting(image_list)
+        
+        
+    def auto_message_select_all_day_select(self,checkbox_list,day_list):
+        for index,day in enumerate(day_list):
+            self.verify_auto_message_update_day_setting(checkbox_list[index], day)
+        for index,day in enumerate(day_list):
+            self.verify_auto_message_update_day_setting(checkbox_list[index])
+    
+    def verify_auto_message_update_title(self, view_list, image_list):
+        setting_save_btn = view_list[5].get_attribute("contentDescription")
+        setting_basic_time = view_list[11].get_attribute("contentDescription")
+        default_menu_start_time = self.utils.element_replace(image_list[0].get_attribute("contentDescription"))
+        default_menu_end_time = self.utils.element_replace(image_list[1].get_attribute("contentDescription"))
+        
+        assert setting_save_btn == "확인", "확인 버튼 텍스트 비교 테스트 실패"
+        assert setting_basic_time == "GMT + 09:00 서울", "확인 버튼 텍스트 비교 테스트 실패"
+        assert default_menu_start_time == "시작오전07:00", "메시지 자동응답 시작시간 텍스트 비교 테스트 실패"
+        assert default_menu_end_time == "종료오후10:00", "메시지 자동응답 종료시간 텍스트 비교 테스트 실패"
+    
+    def verify_auto_message_update_ui(self,view_list, image_list, switch_list, checkbox_list):
+        save_btn_ui_compare_value = self.utils.compare_image("auto_message_update_setting_save_btn.png", view_list[5], "auto_message_update_setting_save_btn.png","home")
+        # all_time_enabled_ui_compare_value = self.utils.compare_image("auto_message_all_time_enabled.png", switch_list[0], "auto_message_update_setting_save_btn.png","home")
+        update_setting_start_time_ui_compare_value = self.utils.compare_image("auto_message_update_setting_start_time.png", image_list[0], "auto_message_update_setting_start_time.png","home")
+        update_setting_end_time_ui_compare_value = self.utils.compare_image("auto_message_update_setting_end_time.png", image_list[1], "auto_message_update_setting_end_time.png","home")
+        auto_message_mon_ui_compare_value = self.utils.compare_image("auto_message_mon.png", checkbox_list[0], "auto_message_mon.png","home")
+        auto_message_tue_ui_compare_value = self.utils.compare_image("auto_message_tue.png", checkbox_list[1], "auto_message_tue.png","home")
+        auto_message_wen_ui_compare_value = self.utils.compare_image("auto_message_wen.png", checkbox_list[2], "auto_message_wen.png","home")
+        auto_message_thu_ui_compare_value = self.utils.compare_image("auto_message_thu.png", checkbox_list[3], "auto_message_thu.png","home")
+        auto_message_fri_ui_compare_value = self.utils.compare_image("auto_message_fri.png", checkbox_list[4], "auto_message_fri.png","home")
+        auto_message_sat_ui_compare_value = self.utils.compare_image("auto_message_sat.png", checkbox_list[5], "auto_message_sat.png","home")
+        auto_message_sun_ui_compare_value = self.utils.compare_image("auto_message_sun.png", checkbox_list[6], "auto_message_sun.png","home")
+        
+        assert save_btn_ui_compare_value, "메시지 자동응답 수정 페이지 확인 버튼 UI 비교 테스트 실패"
+        # assert all_time_enabled_ui_compare_value, "메시지 자동응답 수정 페이지 종일 버튼 UI 비교 테스트 실패"
+        assert update_setting_start_time_ui_compare_value, "메시지 자동응답 수정 페이지 시작 시간 UI 비교 테스트 실패"
+        assert update_setting_end_time_ui_compare_value, "메시지 자동응답 수정 페이지 종료 시간 UI 비교 테스트 실패"
+        assert auto_message_mon_ui_compare_value, "메시지 자동응답 수정 페이지 월요일 UI 비교 테스트 실패"
+        assert auto_message_tue_ui_compare_value, "메시지 자동응답 수정 페이지 화요일 UI 비교 테스트 실패"
+        assert auto_message_wen_ui_compare_value, "메시지 자동응답 수정 페이지 수요일 UI 비교 테스트 실패"
+        assert auto_message_thu_ui_compare_value, "메시지 자동응답 수정 페이지 목요일 UI 비교 테스트 실패"
+        assert auto_message_fri_ui_compare_value, "메시지 자동응답 수정 페이지 금요일 UI 비교 테스트 실패"
+        assert auto_message_sat_ui_compare_value, "메시지 자동응답 수정 페이지 토요일 UI 비교 테스트 실패"
+        assert auto_message_sun_ui_compare_value, "메시지 자동응답 수정 페이지 일요일 UI 비교 테스트 실패"
+    
+    def verify_auto_message_none_day_select(self,checkbox_list):
+        for index in range(7):
+            self.verify_auto_message_update_day_setting(checkbox_list[index])
+            
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        for item in view_list:
+            desc = item.get_attribute("contentDescription")
+            assert desc != "확인", "메시지 자동 응답 날짜 미지정 확인버튼 미노출 테스트 실패"
+        
+        for index in range(7):
+            self.verify_auto_message_update_day_setting(checkbox_list[index])
+    
+    def verify_auto_message_update_day_setting(self, index_btn, file_name=None):
+        index_btn.click()
+        if file_name:
+            assert self.utils.compare_image(file_name, index_btn, file_name, "home")
+
+    def auto_message_update_time_setting(self, time_btn):
+        time_btn[0].click()
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        self.verify_auto_message_update_default_start_time_setting_ui(view_list,btn_list)
+        btn_list[0].click()
+
+        time_btn[1].click()
+        self.verify_auto_message_update_default_end_time_setting_ui(view_list,btn_list)
+        btn_list[0].click()
+        
+    def verify_auto_message_update_default_start_time_setting_ui(self,view_list,btn_list):
+        default_time_popup_ui_compare_result = self.utils.compare_image("default_start_time_popup.png", view_list[4], "default_start_time_popup.png", "home")
+        active_am_ui_compare_result = self.utils.compare_image("active_start_am_setting.png", view_list[5], "active_am_setting.png", "home")
+        enabled_pm_ui_compare_result = self.utils.compare_image("enabled_start_pm_stting.png", view_list[6], "enabled_pm_stting.png", "home")
+        popup_cancle_btn_ui_compare_result = self.utils.compare_image("default_start_time_popup_cancle_btn.png", btn_list[0], "default_start_time_popup_cancle_btn.png", "home")
+        popup_save_btn_ui_compare_result = self.utils.compare_image("default_start_time_popup_save_btn.png", btn_list[1], "default_start_time_popup_save_btn.png", "home")
+        
+        assert default_time_popup_ui_compare_result, "기본 설정 시간 UI 비교 테스트 실패"
+        assert active_am_ui_compare_result, "기본설정 AM 값 UI 비교 테스트 실패"
+        assert enabled_pm_ui_compare_result, "기본설정 PM 값 UI 비교 테스트 실패"
+        assert popup_cancle_btn_ui_compare_result, "팝업 취소 버튼 UI 비교 테스트 실패"
+        assert popup_save_btn_ui_compare_result, "팝업 확인 버튼 UI 비교 테스트 실패"
+    
+    def verify_auto_message_update_default_end_time_setting_ui(self,view_list,btn_list):
+        default_time_popup_ui_compare_result = self.utils.compare_image("default_end_time_popup.png", view_list[4], "default_start_time_popup.png", "home")
+        active_am_ui_compare_result = self.utils.compare_image("enabled_end_am_setting.png", view_list[5], "enabled_am_setting.png", "home")
+        enabled_pm_ui_compare_result = self.utils.compare_image("active_end_pm_stting.png", view_list[6], "active_pm_stting.png", "home")
+        popup_cancle_btn_ui_compare_result = self.utils.compare_image("default_end_time_popup_cancle_btn.png", btn_list[0], "default_time_popup_cancle_btn.png", "home")
+        popup_save_btn_ui_compare_result = self.utils.compare_image("default_end_time_popup_save_btn.png", btn_list[1], "default_time_popup_save_btn.png", "home")
+        
+        assert default_time_popup_ui_compare_result, "기본 설정 시간 UI 비교 테스트 실패"
+        assert active_am_ui_compare_result, "기본설정 AM 값 UI 비교 테스트 실패"
+        assert enabled_pm_ui_compare_result, "기본설정 PM 값 UI 비교 테스트 실패"
+        assert popup_cancle_btn_ui_compare_result, "팝업 취소 버튼 UI 비교 테스트 실패"
+        assert popup_save_btn_ui_compare_result, "팝업 확인 버튼 UI 비교 테스트 실패"
+    
+    def set_popup_time(self):
         return
     
     def set_message_auto_resopnse(self, switch_btn):
@@ -478,7 +599,6 @@ class Home():
     
 
 class setting:
-    
     def __init__(self,driver):
         self.driver = driver
         self.utils = Utils(driver)
