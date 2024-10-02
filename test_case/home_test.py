@@ -454,9 +454,9 @@ class Home():
     def auto_message_time_update(self):
         update_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
         menu_active_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
-        # self.set_message_auto_resopnse(menu_active_btn)
-        # self.auto_message_setting_list_menu_oepn()
-        # self.auto_message_time_update_menu_open(update_btn)
+        self.set_message_auto_resopnse(menu_active_btn)
+        self.auto_message_setting_list_menu_oepn()
+        self.auto_message_time_update_menu_open(update_btn)
         self.verify_auto_message_time_update_page()
 
     def verify_auto_message_time_update_page(self):
@@ -465,19 +465,19 @@ class Home():
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         switch_list = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)
         
-        # self.verify_auto_message_update_title(view_list, image_list)
-        # self.verify_auto_message_update_ui(view_list, image_list, switch_list, checkbox_list)
-        # day_list = [
-        #     'enabled_mon_day.png',
-        #     'enabled_tue_day.png',
-        #     'enabled_wen_day.png',
-        #     'enabled_thu_day.png',
-        #     'enabled_fri_day.png',
-        #     'enabled_sta_day.png',
-        #     'enabled_sun_day.png',
-        # ]
-        # self.auto_message_select_all_day_select(checkbox_list, day_list)
-        # self.verify_auto_message_none_day_select(checkbox_list)
+        self.verify_auto_message_update_title(view_list, image_list)
+        self.verify_auto_message_update_ui(view_list, image_list, switch_list, checkbox_list)
+        day_list = [
+            'enabled_mon_day.png',
+            'enabled_tue_day.png',
+            'enabled_wen_day.png',
+            'enabled_thu_day.png',
+            'enabled_fri_day.png',
+            'enabled_sta_day.png',
+            'enabled_sun_day.png',
+        ]
+        self.auto_message_select_all_day_select(checkbox_list, day_list)
+        self.verify_auto_message_none_day_select(checkbox_list)
         self.auto_message_update_time_setting(image_list)
         
         
@@ -577,7 +577,7 @@ class Home():
         assert popup_cancle_btn_ui_compare_result, "팝업 취소 버튼 UI 비교 테스트 실패"
         assert popup_save_btn_ui_compare_result, "팝업 확인 버튼 UI 비교 테스트 실패"
     
-    def set_popup_time(self):
+    def verify_auto_message_update_default_end_time_setting_ui(self):
         return
     
     def set_message_auto_resopnse(self, switch_btn):
