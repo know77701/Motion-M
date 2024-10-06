@@ -25,6 +25,7 @@ class Home():
         # self.test_is_notifications_paused_ui_check()
         # self.test_configure_notification_time()
         self.test_configure_notification_time_delete()
+        self.test_auto_message_response()
     
     def test_home_page_ui_check(self):
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
@@ -322,6 +323,7 @@ class Home():
 
         for (setting_num, expected_image) in notification_steps:
             self.perform_notification_test(setting_num, expected_image)
+
         self.notificaiton_test_setting_reset()
 
     def perform_notification_test(self, setting_num, expected_image):
@@ -330,7 +332,7 @@ class Home():
         return_time = self.notifications_paused_list_ui_check(setting_num, expected_image)
         self.notifications_puased_menu_icon_ui_check()
         self.notification_menu_text_compare(return_time)
-    
+        
  
     def notificaiton_test_setting_reset(self):
         btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
@@ -396,6 +398,118 @@ class Home():
         btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         btn_list[index].click()
         
+    def test_auto_message_response(self):
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
+        
+        self.verify_auto_message_off_title(view_list)
+        self.verify_auto_message_off_ui(view_list, switch_btn)
+        self.set_message_auto_resopnse(switch_btn)
+        
+        active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        self.verify_auto_message_on_title(active_setting_view_list)
+        self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
+
+        self.verify_auto_message_list_menu_modal()
+        self.verify_auto_message_defalut_time_delete()
+        
+    def verify_auto_message_off_title(self, view_list):
+        auto_message_response_title = view_list[4].get_attribute("contentDescription")
+        auto_message_response_setting_list_title = view_list[8].get_attribute("contentDescription")
+        assert auto_message_response_title == "메시지 자동 응답", "메시지 자동 응답 타이틀 비교 테스트 실패"
+        assert auto_message_response_setting_list_title == "메시지 자동 응답", "메시지 자동 응답 설정 타이틀 비교 테스트 실패"
+    
+    def verify_auto_message_off_ui(self, view_list, switch_btn):
+        auto_message_title_ui_check = self.utils.compare_image("message_auto_response_title.png", view_list[4], "message_auto_response_title.png", "home")
+        auto_message_setting_list_title_ui_check = self.utils.compare_image("message_auto_response_setting_list_title.png", view_list[8], "message_auto_response_setting_list_title.png", "home")
+        auto_message_switch_btn_image_compare = self.utils.compare_image("message_auto_response_setting_btn.png", switch_btn, "message_auto_response_setting_btn.png", "home")
+        assert auto_message_title_ui_check, "메시지 자동 응답 타이틀 UI 비교 테스트 실패"
+        assert auto_message_setting_list_title_ui_check, "메시지 자동 응답 리스트 타이틀 UI 비교 테스트 실패"
+        assert auto_message_switch_btn_image_compare, "메시지 자동 응답 OFF 버튼 UI 비교 테스트 실패"
+    
+    def verify_auto_message_on_title(self, view_list):
+        auto_message_notification_time_title = view_list[9].get_attribute("contentDescription")
+        base_country_time = view_list[10].get_attribute("contentDescription")
+        auto_message_notification_setting_time = self.utils.element_replace(view_list[11].get_attribute("contentDescription"))
+        auto_message_notification_setting_append_btn_text = view_list[12].get_attribute("contentDescription")
+        auto_message_setting_title = view_list[13].get_attribute("contentDescription")
+        
+        assert auto_message_notification_time_title == "알림 수신 시간", "알림 수신 시간 서브 타이틀 비교 테스트 실패"
+        assert base_country_time == "GMT +09:00 서울", "기준 나라 시간 타이틀 비교 테스트 실패"
+        assert auto_message_notification_setting_time == "매일오전07:00~오후10:00", "알림 수신 시간 기본 값 텍스트 비교 테스트 실패"
+        assert auto_message_notification_setting_append_btn_text == "시간설정 추가", "시간설정 추가 버튼 텍스트 비교 테스트 실패"
+        assert auto_message_setting_title == "자동 응답 내용", "자동 응답 내용 입력 타이틀 비교 테스트 실패"
+        
+    def verify_auto_message_on_ui(self, view_list,switch_btn):
+        auto_message_notification_time_title_compare_value = self.utils.compare_image("auto_message_notification_time_title.png",view_list[9],"auto_message_notification_time_title.png", "home")
+        auto_message_base_country_time_compare_value = self.utils.compare_image("auto_message_base_country_time.png",view_list[10],"auto_message_base_country_time.png", "home")
+        auto_message_notification_setting_time_compare_value = self.utils.compare_image("auto_message_notification_setting_time.png",view_list[11],"auto_message_notification_setting_time.png", "home")
+        auto_message_notification_setting_append_btn_text_compare_value = self.utils.compare_image("auto_message_notification_setting_append_btn_text.png",view_list[12],"auto_message_notification_setting_append_btn_text.png", "home")
+        auto_message_setting_title_compare_value = self.utils.compare_image("auto_message_setting_title.png",switch_btn,"auto_message_setting_title.png", "home")
+        
+        assert auto_message_notification_time_title_compare_value, "알림 수신 시간 서브 타이틀 비교 테스트 실패"
+        assert auto_message_base_country_time_compare_value, "기준 나라 시간 타이틀 비교 테스트 실패"
+        assert auto_message_notification_setting_time_compare_value, "알림 수신 시간 기본 값 텍스트 비교 테스트 실패"
+        assert auto_message_notification_setting_append_btn_text_compare_value, "시간설정 추가 버튼 텍스트 비교 테스트 실패"
+        assert auto_message_setting_title_compare_value, "자동 응답 내용 입력 타이틀 비교 테스트 실패"
+    
+    def verify_auto_message_list_menu_modal(self):
+        self.auto_message_setting_list_menu_oepn()
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        self.verify_auto_message_modal_title(btn_list)
+        self.verify_auto_message_modal_ui(view_list, btn_list)
+        self.verify_auto_message_defalut_time_delete(btn_list[1])
+    
+    def auto_message_setting_list_menu_oepn(self):
+        setting_menu_btn = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)[0]
+        setting_menu_btn.click()
+    
+    def verify_auto_message_modal_title(self, btn_list):
+        update_btn = btn_list[0].get_attribute("contentDescription")
+        delete_btn = btn_list[1].get_attribute("contentDescription")
+        
+        assert update_btn == "편집", "메시지 자동 응답 모달 업데이트 버튼 텍스트 비교 테스트 실패"
+        assert delete_btn == "삭제", "메시지 자동 응답 모달 삭제 버튼 텍스트 비교 테스트 실패"
+        
+    def verify_auto_message_modal_ui(self, view_list, btn_list):
+        update_btn_ui_compare = self.utils.compare_image("auto_message_menu_modal_update_btn.png", btn_list[0], "auto_message_menu_modal_update_btn.png", "home")
+        delete_btn_ui_compare = self.utils.compare_image("auto_message_menu_modal_delete_btn.png", btn_list[1], "auto_message_menu_modal_delete_btn.png", "home")
+        modal_ui_compare = self.utils.compare_image("auto_message_menu_modal.png", view_list[6], "auto_message_menu_modal.png", "home")
+        
+        assert modal_ui_compare, "메시지 자동 응답 모달 UI 비교 테스트 실패"
+        assert update_btn_ui_compare, "메시지 자동 응답 모달 업데이트 버튼 UI 비교 테스트 실패"
+        assert delete_btn_ui_compare, "메시지 자동 응답 모달 삭제 버튼 UI 비교 테스트 실패"
+        
+    def verify_auto_message_defalut_time_delete(self, delete_btn):
+        delete_btn.click()
+        toast_popup = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)[19]
+        toast_popup_compare = self.utils.compare_image("auto_message_default_delete_toast.png", toast_popup, "auto_message_default_delete_toast.png", "home")
+        
+        assert toast_popup.get_attribute("contentDescription") == "최소 하나의 알림시간이 설정되어야 합니다", "메시지 자동 응답 기본값 삭제 토스트 팝업 문구 비교 테스트 실패"
+        assert toast_popup_compare, "메시지 자동 응답 기본값 삭제 토스트 팝업 UI 비교 테스트 실패"
+
+    def auto_message_time_update_menu_open(self, update_btn):
+        update_btn.click()
+
+    def auto_message_time_update(self):
+        self.auto_message_setting_list_menu_oepn()
+        self.auto_message_time_update_menu_open()
+        
+        self.utils.get_element_list_print(self.selectors.VIEW_CLASS_NAME)
+        self.utils.get_element_list_print(self.selectors.BUTTON_CLASS_NAME)
+        self.utils.get_element_list_print(self.selectors.IMAGE_CLASS_NAME)
+
+    def verify_auto_time_update_title(self):
+        return
+    
+    def verify_auto_time_update_ui(self):
+        
+        return
+    
+    def set_message_auto_resopnse(self, switch_btn):
+        switch_btn.click()
+    
     def test_logout(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         image_list[0].click()
@@ -408,6 +522,7 @@ class Home():
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         assert view_list[4].get_attribute("contentDescription") == "로그아웃 하시겠습니까?", "로그아웃 팝업 텍스트 비교 테스트 실패"
         btn_list[1].click()
+    
     
 
 class setting:
