@@ -15,7 +15,7 @@ class Home():
         # self.test_home_page_ui_check()
         # self.test_profile_image_check()
         # self.test_status_bottom_sheet_ui_check()
-        # self.test_status_stting()
+        # self.test_status_setting()
         # self.test_user_card_ui_check()
         # self.test_user_card_status()
         # self.test_user_card_org_chart_oepn()
@@ -26,7 +26,7 @@ class Home():
         # self.test_notifications_paused_list_ui_check()
         # self.test_is_notifications_paused_ui_check()
         # self.test_configure_notification_time()
-        self.test_configure_notification_time_delete()
+        # self.test_configure_notification_time_delete()
         self.test_auto_message_response()
         
     
@@ -102,7 +102,7 @@ class Home():
             assert self.utils.compare_image(f"status_setting_{status}.png", view_list[3], f"status_setting_{status}.png", "home"), f"{status} 상태값 설정 바텀시트 UI 비교 테스트 실패"
             self.utils.bottom_sheet_close()
         
-    def test_status_stting(self):
+    def test_status_setting(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         for item in self.status_list:
             self.check_status_setting(btn_element=image_list[1],status=item)
@@ -272,7 +272,6 @@ class Home():
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         setting_menu_btn = image_list[0]
         setting_menu_btn.click()
-        image_list[0].click()
         
     def navigate_back_from_menu(self):
         back_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
@@ -336,7 +335,6 @@ class Home():
         return_time = self.notifications_paused_list_ui_check(setting_num, expected_image)
         self.notifications_puased_menu_icon_ui_check()
         self.notification_menu_text_compare(return_time)
-        
  
     def notificaiton_test_setting_reset(self):
         btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
@@ -403,21 +401,22 @@ class Home():
         btn_list[index].click()
         
     def test_auto_message_response(self):
-        # view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        # switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
+        self.open_notifiaction_test_menu(2,4)
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
         
-        # self.verify_auto_message_off_title(view_list)
-        # self.verify_auto_message_off_ui(view_list, switch_btn)
-        # self.set_message_auto_resopnse(switch_btn)
+        self.verify_auto_message_off_title(view_list)
+        self.verify_auto_message_off_ui(view_list, switch_btn)
+        self.set_message_auto_resopnse(switch_btn)
         
-        # active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        # self.verify_auto_message_on_title(active_setting_view_list)
-        # self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
+        active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        self.verify_auto_message_on_title(active_setting_view_list)
+        self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
 
-        # self.verify_auto_message_list_menu_modal()
-        # self.set_message_auto_resopnse(switch_btn)
+        self.verify_auto_message_list_menu_modal()
+        self.set_message_auto_resopnse(switch_btn)
         
-        # self.menu_back_btn_click()
+        self.menu_back_btn_click()
         self.auto_message_time_update()
 
         
@@ -504,6 +503,8 @@ class Home():
         update_btn.click()
 
     def auto_message_time_update(self):
+        time.sleep(3)
+        self.open_notifiaction_test_menu(2,4)
         update_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
         menu_active_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
         self.set_message_auto_resopnse(menu_active_btn)
@@ -540,6 +541,7 @@ class Home():
             self.verify_auto_message_update_day_setting(checkbox_list[index])
     
     def verify_auto_message_update_title(self, view_list, image_list):
+        
         setting_save_btn = view_list[5].get_attribute("contentDescription")
         setting_basic_time = view_list[11].get_attribute("contentDescription")
         default_menu_start_time = self.utils.element_replace(image_list[0].get_attribute("contentDescription"))
@@ -593,23 +595,30 @@ class Home():
             assert self.utils.compare_image(file_name, index_btn, file_name, "home")
 
     def auto_message_update_time_setting(self, time_btn):
-        time_btn[0].click()
+        self.verify_auto_message_default_time_setting(time_btn[0], "start")
+        self.verify_auto_message_default_time_setting(time_btn[1], "end")
+        
+    def verify_auto_message_default_time_setting(self, time_ment_open_btn, ui_check_test_case):
+        time_ment_open_btn.click()
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
-        self.verify_auto_message_update_default_start_time_setting_ui(view_list,btn_list)
-        btn_list[0].click()
-
-        time_btn[1].click()
-        self.verify_auto_message_update_default_end_time_setting_ui(view_list,btn_list)
-        btn_list[0].click()
+        if ui_check_test_case == "start":
+            self.verify_auto_message_update_default_start_time_setting_ui(view_list,btn_list)
+            self.change_time_value(view_list)
+        elif ui_check_test_case == "end":
+            self.verify_auto_message_update_default_end_time_setting_ui(view_list,btn_list)
+            self.change_time_value(view_list)
+            
+        cancle_btn =btn_list[0]
+        cancle_btn.click()
         
     def verify_auto_message_update_default_start_time_setting_ui(self,view_list,btn_list):
         default_time_popup_ui_compare_result = self.utils.compare_image("default_start_time_popup.png", view_list[4], "default_start_time_popup.png", "home")
         active_am_ui_compare_result = self.utils.compare_image("active_start_am_setting.png", view_list[5], "active_am_setting.png", "home")
-        enabled_pm_ui_compare_result = self.utils.compare_image("enabled_start_pm_stting.png", view_list[6], "enabled_pm_stting.png", "home")
+        enabled_pm_ui_compare_result = self.utils.compare_image("enabled_start_pm_setting.png", view_list[6], "enabled_pm_setting.png", "home")
         popup_cancle_btn_ui_compare_result = self.utils.compare_image("default_start_time_popup_cancle_btn.png", btn_list[0], "default_start_time_popup_cancle_btn.png", "home")
         popup_save_btn_ui_compare_result = self.utils.compare_image("default_start_time_popup_save_btn.png", btn_list[1], "default_start_time_popup_save_btn.png", "home")
-        
+
         assert default_time_popup_ui_compare_result, "기본 설정 시간 UI 비교 테스트 실패"
         assert active_am_ui_compare_result, "기본설정 AM 값 UI 비교 테스트 실패"
         assert enabled_pm_ui_compare_result, "기본설정 PM 값 UI 비교 테스트 실패"
@@ -619,7 +628,7 @@ class Home():
     def verify_auto_message_update_default_end_time_setting_ui(self,view_list,btn_list):
         default_time_popup_ui_compare_result = self.utils.compare_image("default_end_time_popup.png", view_list[4], "default_start_time_popup.png", "home")
         active_am_ui_compare_result = self.utils.compare_image("enabled_end_am_setting.png", view_list[5], "enabled_am_setting.png", "home")
-        enabled_pm_ui_compare_result = self.utils.compare_image("active_end_pm_stting.png", view_list[6], "active_pm_stting.png", "home")
+        enabled_pm_ui_compare_result = self.utils.compare_image("active_end_pm_setting.png", view_list[6], "active_pm_setting.png", "home")
         popup_cancle_btn_ui_compare_result = self.utils.compare_image("default_end_time_popup_cancle_btn.png", btn_list[0], "default_time_popup_cancle_btn.png", "home")
         popup_save_btn_ui_compare_result = self.utils.compare_image("default_end_time_popup_save_btn.png", btn_list[1], "default_time_popup_save_btn.png", "home")
         
@@ -629,9 +638,32 @@ class Home():
         assert popup_cancle_btn_ui_compare_result, "팝업 취소 버튼 UI 비교 테스트 실패"
         assert popup_save_btn_ui_compare_result, "팝업 확인 버튼 UI 비교 테스트 실패"
     
-    def verify_auto_message_update_default_end_time_setting_ui(self):
-        return
     
+    def change_time_value(self, view_list):
+        self.verify_change_time_value(view_list,"start")
+        self.verify_change_time_value(view_list,"end")
+
+    def verify_change_time_value(self, view_list, compare_value):
+        am_time_setting_btn = view_list[5]
+        pm_time_setting_btn =  view_list[6]
+        
+        if compare_value == "start":
+            pm_time_setting_btn.click()
+            pm_setting_ui_compare = self.utils.compare_image("enable_am_setting.png", am_time_setting_btn, "enabled_am_setting.png", "home")
+            am_setting_ui_compare = self.utils.compare_image("active_pm_setting.png", pm_time_setting_btn, "active_pm_setting.png", "home")
+            assert pm_setting_ui_compare, "PM 버튼 클릭 활성화 UI 비교 테스트 실패"
+            assert am_setting_ui_compare, "AM 버튼 클릭 비활성화 UI 비교 테스트 실패"
+            am_time_setting_btn.click()
+            
+        elif compare_value == "end":
+            am_time_setting_btn.click()
+            pm_setting_ui_compare = self.utils.compare_image("active_am_setting.png", am_time_setting_btn, "active_am_setting.png", "home")
+            am_setting_ui_compare = self.utils.compare_image("enable_pm_setting.png", pm_time_setting_btn, "enabled_pm_setting.png", "home")
+            assert am_setting_ui_compare, "AM 버튼 클릭 활성화 UI 비교 테스트 실패"
+            assert pm_setting_ui_compare, "PM 버튼 클릭 비활성화 UI 비교 테스트 실패"
+            pm_time_setting_btn.click()
+                    
+
     def set_message_auto_resopnse(self, switch_btn):
         switch_btn.click()
     
