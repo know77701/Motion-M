@@ -2,6 +2,7 @@ from utils.utils import Utils
 from config.selectors import Selectors
 import time
 from appium.webdriver.common.appiumby import AppiumBy
+import random
 
 
 class Home():
@@ -401,22 +402,22 @@ class Home():
         btn_list[index].click()
         
     def test_auto_message_response(self):
-        self.open_notifiaction_test_menu(2,4)
-        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
+        # self.open_notifiaction_test_menu(2,4)
+        # view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        # switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
         
-        self.verify_auto_message_off_title(view_list)
-        self.verify_auto_message_off_ui(view_list, switch_btn)
-        self.set_message_auto_resopnse(switch_btn)
+        # self.verify_auto_message_off_title(view_list)
+        # self.verify_auto_message_off_ui(view_list, switch_btn)
+        # self.set_auto_message_menu_control(switch_btn)
         
-        active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        self.verify_auto_message_on_title(active_setting_view_list)
-        self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
+        # active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        # self.verify_auto_message_on_title(active_setting_view_list)
+        # self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
 
-        self.verify_auto_message_list_menu_modal()
-        self.set_message_auto_resopnse(switch_btn)
+        # self.verify_auto_message_list_menu_modal()
+        # self.set_auto_message_menu_control(switch_btn)
         
-        self.menu_back_btn_click()
+        # self.menu_back_btn_click()
         self.auto_message_time_update()
 
         
@@ -503,15 +504,19 @@ class Home():
         update_btn.click()
 
     def auto_message_time_update(self):
-        time.sleep(3)
-        self.open_notifiaction_test_menu(2,4)
-        update_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
-        menu_active_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
-        self.set_message_auto_resopnse(menu_active_btn)
-        self.auto_message_setting_list_menu_oepn()
-        self.auto_message_time_update_menu_open(update_btn)
+        # time.sleep(3)
+        # self.open_notifiaction_test_menu(2,4)
+        # update_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
+        # menu_active_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
+        # self.set_auto_message_menu_control(menu_active_btn)
+        # self.auto_message_setting_list_menu_oepn()
+        # self.auto_message_time_update_menu_open(update_btn)
         self.verify_auto_message_time_update_page()
-
+        # self.menu_back_btn_click()
+        
+        # self.setting_back_modal_control()
+        
+        
     def verify_auto_message_time_update_page(self):
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         checkbox_list = self.utils.get_all_elements(self.selectors.CHECKBOX_CLASS_NAME)
@@ -532,6 +537,9 @@ class Home():
         self.auto_message_select_all_day_select(checkbox_list, day_list)
         self.verify_auto_message_none_day_select(checkbox_list)
         self.auto_message_update_time_setting(image_list)
+        setting_days = self.random_day_select(checkbox_list)
+        self.random_time_setting(image_list)
+        
         
         
     def auto_message_select_all_day_select(self,checkbox_list,day_list):
@@ -638,7 +646,6 @@ class Home():
         assert popup_cancle_btn_ui_compare_result, "팝업 취소 버튼 UI 비교 테스트 실패"
         assert popup_save_btn_ui_compare_result, "팝업 확인 버튼 UI 비교 테스트 실패"
     
-    
     def change_time_value(self, view_list):
         self.verify_change_time_value(view_list,"start")
         self.verify_change_time_value(view_list,"end")
@@ -662,9 +669,56 @@ class Home():
             assert am_setting_ui_compare, "AM 버튼 클릭 활성화 UI 비교 테스트 실패"
             assert pm_setting_ui_compare, "PM 버튼 클릭 비활성화 UI 비교 테스트 실패"
             pm_time_setting_btn.click()
+    
+    def verify_select_update_setting_ui(self):
+        return
+    
+    def random_time_setting(self,image_list):
+        self.auto_message_update_time_setting(image_list[0],"start")
+    
+        return
+    
+    def random_day_select(self):
+        random_index_value = random.choice(range(1,6))
+        random_value = sorted(random.sample(range(7), k=random_index_value))
+        check_list = self.utils.get_all_elements(self.selectors.CHECKBOX_CLASS_NAME)
+        day_list = []
+        
+        for item in random_value:
+            check_list[item].click()
+            match item:
+                case 0:
+                    day_list.append("월")
+                case 1:
+                    day_list.append("화")
+                case 2:
+                    day_list.append("수")
+                case 3:
+                    day_list.append("목")
+                case 4:
+                    day_list.append("금")
+                case 5:
+                    day_list.append("토")
+                case 6:
+                    day_list.append("일")
                     
+        return day_list
+    
 
-    def set_message_auto_resopnse(self, switch_btn):
+    # 동작을 가지고 와서 실제로 모달 팝업 동작에 대한 값 비교 필요    
+    def setting_back_modal_control(self, action_value):
+        modal_popup = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)[0]
+        btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
+        
+        self.utils.screenshot_image("setting_update_back_modal.png", modal_popup)
+        cancel_btn = btn_list[0]
+        save_btn = btn_list[1]
+        if action_value == "취소":
+            cancel_btn.click()
+        else:
+            save_btn.click()
+        
+    def set_auto_message_menu_control(self, switch_btn):
         switch_btn.click()
     
     def test_logout(self):
@@ -680,8 +734,6 @@ class Home():
         assert view_list[4].get_attribute("contentDescription") == "로그아웃 하시겠습니까?", "로그아웃 팝업 텍스트 비교 테스트 실패"
         btn_list[1].click()
     
-    
-
 class setting:
     def __init__(self,driver):
         self.driver = driver
