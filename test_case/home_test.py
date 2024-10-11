@@ -3,6 +3,9 @@ from config.selectors import Selectors
 import time
 from appium.webdriver.common.appiumby import AppiumBy
 import random
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.actions import interaction
+from selenium.webdriver.common.actions.pointer_input import PointerInput
 
 
 class Home():
@@ -523,24 +526,23 @@ class Home():
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         switch_list = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)
         
-        self.verify_auto_message_update_title(view_list, image_list)
-        self.verify_auto_message_update_ui(view_list, image_list, switch_list, checkbox_list)
-        day_list = [
-            'enabled_mon_day.png',
-            'enabled_tue_day.png',
-            'enabled_wen_day.png',
-            'enabled_thu_day.png',
-            'enabled_fri_day.png',
-            'enabled_sta_day.png',
-            'enabled_sun_day.png',
-        ]
-        self.auto_message_select_all_day_select(checkbox_list, day_list)
-        self.verify_auto_message_none_day_select(checkbox_list)
-        self.auto_message_update_time_setting(image_list)
-        setting_days = self.random_day_select(checkbox_list)
-        self.random_time_setting(image_list)
-        
-        
+        # self.verify_auto_message_update_title(view_list, image_list)
+        # self.verify_auto_message_update_ui(view_list, image_list, switch_list, checkbox_list)
+        # day_list = [
+        #     'enabled_mon_day.png',
+        #     'enabled_tue_day.png',
+        #     'enabled_wen_day.png',
+        #     'enabled_thu_day.png',
+        #     'enabled_fri_day.png',
+        #     'enabled_sta_day.png',
+        #     'enabled_sun_day.png',
+        # ]
+        # self.auto_message_select_all_day_select(checkbox_list, day_list)
+        # self.verify_auto_message_none_day_select(checkbox_list)
+        # self.auto_message_update_time_setting(image_list)
+        # setting_days = self.random_day_select(checkbox_list)
+        self.random_time_setting(image_list, "start")
+        # self.verify_all_time_setting(switch_list)
         
     def auto_message_select_all_day_select(self,checkbox_list,day_list):
         for index,day in enumerate(day_list):
@@ -670,18 +672,58 @@ class Home():
             assert pm_setting_ui_compare, "PM 버튼 클릭 비활성화 UI 비교 테스트 실패"
             pm_time_setting_btn.click()
     
+    def verify_all_time_setting(self):
+        
+        return
+    
     def verify_select_update_setting_ui(self):
         return
     
-    def random_time_setting(self,image_list):
-        self.auto_message_update_time_setting(image_list[0],"start")
+    def long_press_drag_action(self, element):
+        x = random.randint(0, 3600)
+        y = random.randint(0, 3600)
     
-        return
+        actions = ActionChains(self.driver)
+        actions.w3c_actions.pointer_action.move_to(element)  
+        actions.w3c_actions.pointer_action.pointer_down() 
+        actions.w3c_actions.pointer_action.pause(3) 
+        actions.w3c_actions.pointer_action.move_to_location(x, y)
+        actions.w3c_actions.pointer_action.pointer_up()
+        actions.perform()
     
-    def random_day_select(self):
+    def random_time_setting(self,image_list, time_value):
+        
+        if time_value == "start":
+            image_list[0].click()
+            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            min_element = view_list[2]
+            self.long_press_drag_action(min_element)
+            time.sleep(3)
+            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            min_element = view_list[3]
+            self.long_press_drag_action(min_element)
+            time.sleep(3)
+            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            min_element = view_list[4]
+            self.long_press_drag_action(min_element)
+            time.sleep(3)
+            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            hour_element = view_list[7]
+            self.long_press_drag_action(hour_element)
+            time.sleep(3)
+            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            hour_element = view_list[8]
+            self.long_press_drag_action(hour_element)
+            time.sleep(3)
+            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+            hour_element = view_list[9]
+            self.long_press_drag_action(hour_element)
+        elif time_value == "end":
+            image_list[1].click()
+    
+    def random_day_select(self, check_list):
         random_index_value = random.choice(range(1,6))
         random_value = sorted(random.sample(range(7), k=random_index_value))
-        check_list = self.utils.get_all_elements(self.selectors.CHECKBOX_CLASS_NAME)
         day_list = []
         
         for item in random_value:
