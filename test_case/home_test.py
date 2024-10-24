@@ -160,10 +160,8 @@ class Home():
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         image_list[1].click()
         mobile_copy = self.utils.return_value_copy()
-        print(mobile_copy)
         image_list[2].click()
         email_copy = self.utils.return_value_copy()
-        print(email_copy)
     
     def test_user_card_my_chattroom_open(self):
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
@@ -521,29 +519,47 @@ class Home():
         
         
     def verify_auto_message_time_update_page(self):
+        
         view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
         checkbox_list = self.utils.get_all_elements(self.selectors.CHECKBOX_CLASS_NAME)
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         switch_list = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)
         
-        # self.verify_auto_message_update_title(view_list, image_list)
-        # self.verify_auto_message_update_ui(view_list, image_list, switch_list, checkbox_list)
-        # day_list = [
-        #     'enabled_mon_day.png',
-        #     'enabled_tue_day.png',
-        #     'enabled_wen_day.png',
-        #     'enabled_thu_day.png',
-        #     'enabled_fri_day.png',
-        #     'enabled_sta_day.png',
-        #     'enabled_sun_day.png',
-        # ]
-        # self.auto_message_select_all_day_select(checkbox_list, day_list)
-        # self.verify_auto_message_none_day_select(checkbox_list)
-        # self.auto_message_update_time_setting(image_list)
-        # setting_days = self.random_day_select(checkbox_list)
-        self.random_time_setting(image_list, "start")
-        # self.verify_all_time_setting(switch_list)
+        self.verify_auto_message_update_title(view_list, image_list)
+        self.verify_auto_message_update_ui(view_list, image_list, switch_list, checkbox_list)
+        day_list = [
+            'enabled_mon_day.png',
+            'enabled_tue_day.png',
+            'enabled_wen_day.png',
+            'enabled_thu_day.png',
+            'enabled_fri_day.png',
+            'enabled_sta_day.png',
+            'enabled_sun_day.png',
+        ]
+        self.auto_message_select_all_day_select(checkbox_list, day_list)
+        self.verify_auto_message_none_day_select(checkbox_list)
+        self.auto_message_update_time_setting(image_list)
+        setting_days = self.random_day_select(checkbox_list)
         
+        start_time = self.random_time_setting(image_list, "start")
+        end_time = self.random_time_setting(image_list, "end")
+        image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
+        view_start_time = self.utils.element_replace(image_list[0].get_attribute("contentDescription"))
+        view_end_time = self.utils.element_replace(image_list[1].get_attribute("contentDescription"))
+        
+        self.verify_setting_time(start_time, view_start_time[4:])
+        self.verify_setting_time(end_time, view_end_time[4:])
+        # self.verify_setting_day(setting_days, )
+        print(setting_days)
+        print(image_list[0].get_attribute("contentDescription"))
+        print(image_list[1].get_attribute("contentDescription"))
+        
+    def verify_setting_day(self, select_days, compare_day):
+        return
+    
+    def verify_setting_time(self, time_value, compare_time_value):
+        assert time_value == compare_time_value, "설정 시간 텍스트 비교 실패"
+    
     def auto_message_select_all_day_select(self,checkbox_list,day_list):
         for index,day in enumerate(day_list):
             self.verify_auto_message_update_day_setting(checkbox_list[index], day)
@@ -673,16 +689,15 @@ class Home():
             pm_time_setting_btn.click()
     
     def verify_all_time_setting(self):
-        
         return
     
     def verify_select_update_setting_ui(self):
         return
     
     def long_press_drag_action(self, element):
-        x = random.randint(0, 3600)
-        y = random.randint(0, 3600)
-    
+        x = random.randint(0, 25000)
+        y = random.randint(0, 25000)
+        
         actions = ActionChains(self.driver)
         actions.w3c_actions.pointer_action.move_to(element)  
         actions.w3c_actions.pointer_action.pointer_down() 
@@ -696,30 +711,24 @@ class Home():
         if time_value == "start":
             image_list[0].click()
             view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-            min_element = view_list[2]
+            min_element = view_list[4]
             self.long_press_drag_action(min_element)
-            time.sleep(3)
-            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-            min_element = view_list[3]
-            self.long_press_drag_action(min_element)
-            time.sleep(3)
+            
+            start_update_setting_time = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)[4]
+            return_time = self.utils.element_replace(start_update_setting_time.get_attribute("contentDescription"))
+        elif time_value == "end":
+            image_list[1].click()
             view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
             min_element = view_list[4]
             self.long_press_drag_action(min_element)
-            time.sleep(3)
-            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-            hour_element = view_list[7]
-            self.long_press_drag_action(hour_element)
-            time.sleep(3)
-            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-            hour_element = view_list[8]
-            self.long_press_drag_action(hour_element)
-            time.sleep(3)
-            view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-            hour_element = view_list[9]
-            self.long_press_drag_action(hour_element)
-        elif time_value == "end":
-            image_list[1].click()
+            
+            end_update_setting_time = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)[4]
+            return_time = self.utils.element_replace(end_update_setting_time.get_attribute("contentDescription"))
+            
+        save_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[1]
+        save_btn.click()
+        return return_time[:5]
+            
     
     def random_day_select(self, check_list):
         random_index_value = random.choice(range(1,6))
@@ -745,7 +754,6 @@ class Home():
                     day_list.append("일")
                     
         return day_list
-    
 
     # 동작을 가지고 와서 실제로 모달 팝업 동작에 대한 값 비교 필요    
     def setting_back_modal_control(self, action_value):
@@ -755,6 +763,7 @@ class Home():
         self.utils.screenshot_image("setting_update_back_modal.png", modal_popup)
         cancel_btn = btn_list[0]
         save_btn = btn_list[1]
+        
         if action_value == "취소":
             cancel_btn.click()
         else:
@@ -762,12 +771,11 @@ class Home():
         
     def set_auto_message_menu_control(self, switch_btn):
         switch_btn.click()
-    
+
     def test_logout(self):
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
         image_list[0].click()
         image_list[2].click()
-        
         
         btn_list = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)
         btn_list[1].click()
