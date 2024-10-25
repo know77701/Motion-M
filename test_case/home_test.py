@@ -544,15 +544,17 @@ class Home():
         start_time = self.random_time_setting(image_list, "start")
         end_time = self.random_time_setting(image_list, "end")
         image_list = self.utils.get_all_elements(self.selectors.IMAGE_CLASS_NAME)
-        view_start_time = self.utils.element_replace(image_list[0].get_attribute("contentDescription"))
-        view_end_time = self.utils.element_replace(image_list[1].get_attribute("contentDescription"))
+        view_start_time = self.utils.element_replace(image_list[0].get_attribute("contentDescription"))[4:]
+        view_end_time = self.utils.element_replace(image_list[1].get_attribute("contentDescription"))[4:]
         
-        self.verify_setting_time(start_time, view_start_time[4:])
-        self.verify_setting_time(end_time, view_end_time[4:])
+        #업데이트 페이지 세팅 타임 비교
+        self.verify_setting_time(start_time, view_start_time)
+        self.verify_setting_time(end_time, view_end_time)
+        
+        setting_save_btn = view_list[5]
+        setting_save_btn.click()
+        
         # self.verify_setting_day(setting_days, )
-        print(setting_days)
-        print(image_list[0].get_attribute("contentDescription"))
-        print(image_list[1].get_attribute("contentDescription"))
         
     def verify_setting_day(self, select_days, compare_day):
         return
@@ -699,7 +701,7 @@ class Home():
         y = random.randint(0, 25000)
         
         actions = ActionChains(self.driver)
-        actions.w3c_actions.pointer_action.move_to(element)  
+        actions.w3c_actions.pointer_action.move_to(element)
         actions.w3c_actions.pointer_action.pointer_down() 
         actions.w3c_actions.pointer_action.pause(3) 
         actions.w3c_actions.pointer_action.move_to_location(x, y)
