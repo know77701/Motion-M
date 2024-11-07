@@ -16,21 +16,21 @@ class Home():
         self.status_list = ["default","busy","metting","off","default"]
     
     def test_run(self):
-        # self.test_home_page_ui_check()
-        # self.test_profile_image_check()
-        # self.test_status_bottom_sheet_ui_check()
-        # self.test_status_setting()
-        # self.test_user_card_ui_check()
-        # self.test_user_card_status()
-        # self.test_user_card_org_chart_oepn()
-        # self.test_user_card_value_copy()
-        # self.test_user_card_my_chattroom_open()
-        # self.test_user_list_ui_check()
-        # self.test_pause_notifications_ui_check()
-        # self.test_notifications_paused_list_ui_check()
-        # self.test_is_notifications_paused_ui_check()
-        # self.test_configure_notification_time()
-        # self.test_configure_notification_time_delete()
+        self.test_home_page_ui_check()
+        self.test_profile_image_check()
+        self.test_status_bottom_sheet_ui_check()
+        self.test_status_setting()
+        self.test_user_card_ui_check()
+        self.test_user_card_status()
+        self.test_user_card_org_chart_oepn()
+        self.test_user_card_value_copy()
+        self.test_user_card_my_chattroom_open()
+        self.test_user_list_ui_check()
+        self.test_pause_notifications_ui_check()
+        self.test_notifications_paused_list_ui_check()
+        self.test_is_notifications_paused_ui_check()
+        self.test_configure_notification_time()
+        self.test_configure_notification_time_delete()
         self.test_auto_message_response()
         
     
@@ -403,22 +403,22 @@ class Home():
         btn_list[index].click()
         
     def test_auto_message_response(self):
-        # self.open_notifiaction_test_menu(2,4)
-        # view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        # switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
+        self.open_notifiaction_test_menu(2,4)
+        view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        switch_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
         
-        # self.verify_auto_message_off_title(view_list)
-        # self.verify_auto_message_off_ui(view_list, switch_btn)
-        # self.set_auto_message_menu_control(switch_btn)
+        self.verify_auto_message_off_title(view_list)
+        self.verify_auto_message_off_ui(view_list, switch_btn)
+        self.set_auto_message_menu_control(switch_btn)
         
-        # active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
-        # self.verify_auto_message_on_title(active_setting_view_list)
-        # self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
+        active_setting_view_list = self.utils.get_all_elements(self.selectors.VIEW_CLASS_NAME)
+        self.verify_auto_message_on_title(active_setting_view_list)
+        self.verify_auto_message_on_ui(active_setting_view_list, switch_btn)
 
-        # self.verify_auto_message_list_menu_modal()
-        # self.set_auto_message_menu_control(switch_btn)
+        self.verify_auto_message_list_menu_modal()
+        self.set_auto_message_menu_control(switch_btn)
         
-        # self.menu_back_btn_click()
+        self.menu_back_btn_click()
         self.auto_message_time_update()
 
         
@@ -505,17 +505,17 @@ class Home():
         update_btn.click()
 
     def auto_message_time_update(self):
-        # time.sleep(3)
-        # self.open_notifiaction_test_menu(2,4)
-        # update_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
-        # menu_active_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
-        # self.set_auto_message_menu_control(menu_active_btn)
-        # self.auto_message_setting_list_menu_oepn()
-        # self.auto_message_time_update_menu_open(update_btn)
+        time.sleep(3)
+        self.open_notifiaction_test_menu(2,4)
+        update_btn = self.utils.get_all_elements(self.selectors.BUTTON_CLASS_NAME)[0]
+        menu_active_btn = self.utils.get_all_elements(self.selectors.SWITCH_CLASS_NAME)[0]
+        self.set_auto_message_menu_control(menu_active_btn)
+        self.auto_message_setting_list_menu_oepn()
+        self.auto_message_time_update_menu_open(update_btn)
         self.verify_auto_message_time_update_page()
-        # self.menu_back_btn_click()
+        self.menu_back_btn_click()
         
-        # self.setting_back_modal_control()
+        self.setting_back_modal_control()
         
         
     def verify_auto_message_time_update_page(self):
