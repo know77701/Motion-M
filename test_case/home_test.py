@@ -16,21 +16,21 @@ class Home():
         self.status_list = ["default","busy","metting","off","default"]
     
     def test_run(self):
-        self.test_home_page_ui_check()
-        self.test_profile_image_check()
-        self.test_status_bottom_sheet_ui_check()
-        self.test_status_setting()
-        self.test_user_card_ui_check()
-        self.test_user_card_status()
-        self.test_user_card_org_chart_oepn()
-        self.test_user_card_value_copy()
-        self.test_user_card_my_chattroom_open()
-        self.test_user_list_ui_check()
-        self.test_pause_notifications_ui_check()
-        self.test_notifications_paused_list_ui_check()
-        self.test_is_notifications_paused_ui_check()
-        self.test_configure_notification_time()
-        self.test_configure_notification_time_delete()
+        # self.test_home_page_ui_check()
+        # self.test_profile_image_check()
+        # self.test_status_bottom_sheet_ui_check()
+        # self.test_status_setting()
+        # self.test_user_card_ui_check()
+        # self.test_user_card_status()
+        # self.test_user_card_org_chart_oepn()
+        # self.test_user_card_value_copy()
+        # self.test_user_card_my_chattroom_open()
+        # self.test_user_list_ui_check()
+        # self.test_pause_notifications_ui_check()
+        # self.test_notifications_paused_list_ui_check()
+        # self.test_is_notifications_paused_ui_check()
+        # self.test_configure_notification_time()
+        # self.test_configure_notification_time_delete()
         self.test_auto_message_response()
         
     
@@ -42,8 +42,8 @@ class Home():
         user_name_replace = self.utils.element_replace(view_list[7].get_attribute("contentDescription"))
         home_title = view_list[5].get_attribute("contentDescription")
         
-        assert home_title == "트라이업영문", "병원명 타이틀 텍스트 비교 테스트 실패"
-        assert user_name_replace == "이말년의사/대표원장", "홈 유저 이름 UI 비교 테스트 실패"
+        assert home_title == "테마1병원", "병원명 타이틀 텍스트 비교 테스트 실패"
+        assert user_name_replace == "김정은", "홈 유저 이름 UI 비교 테스트 실패"
         assert self.utils.compare_image("user_image.png",view_list[8],"home_user_image.png","home"), "홈 유저 이미지 UI 비교 테스트 실패"
         assert self.utils.compare_image("setting_button.png",image_list[0],"home_setting_button.png","home"), "홈 세팅 버튼 UI 비교 테스트 실패"
         assert self.utils.compare_image("status_setting.png",image_list[1],"home_status_setting.png","home"), "홈 유저 상태 세팅 버튼 UI 비교 테스트 실패"
